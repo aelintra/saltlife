@@ -57,7 +57,6 @@ carrier TEXT,
 carriertype TEXT,
 desc TEXT,
 host TEXT,
-md5encrypt TEXT,
 provision TEXT,
 pjsipuser TEXT,				-- Asterisk pjsip stanzas
 pjsipreg TEXT,				-- Asterisk pjsip registration stanza
@@ -65,7 +64,6 @@ register TEXT,
 sipiaxpeer TEXT,
 sipiaxuser TEXT,
 technology TEXT,
-zapcarfixed TEXT,
 z_created datetime,
 z_updated datetime,
 z_updater TEXT DEFAULT 'system'
@@ -95,13 +93,6 @@ recmaxsize TEXT DEFAULT '0',		-- Recording storage maximum for this tenant
 recused TEXT DEFAULT '0',			-- Recording storage used by this tenant (updated according to cron freq)						
 routeclassoverride TEXT,			-- Holiday scheduler route class override
 routeoverride TEXT,					-- Holiday scheduler route override
-startagent INTEGER DEFAULT 8001,
-startconfroom INTEGER DEFAULT 950,
-startextension INTEGER DEFAULT 200,
-startivr INTEGER DEFAULT 750,
-startparks INTEGER DEFAULT 700,
-startqueue INTEGER DEFAULT 800,
-startringgroup INTEGER DEFAULT 400,
 usemohcustom TEXT,
 z_created datetime,
 z_updated datetime,
@@ -118,16 +109,12 @@ blfkeys INTEGER,
 desc TEXT,
 device TEXT,
 fkeys INTEGER,
-imageurl TEXT,
 legacy TEXT,
-noproxy TEXT,
 owner TEXT DEFAULT 'system',
 pkeys INTEGER,
 provision TEXT,
 sipiaxfriend TEXT,
 technology TEXT,
-tftpname TEXT,
-zapdevfixed TEXT,
 z_created datetime,
 z_updated datetime,
 z_updater TEXT DEFAULT 'system'
@@ -186,8 +173,6 @@ firstseen TEXT,							-- first date provisioned (or NULL)
 lastseen TEXT,							-- last date provisioned (or NULL)
 location TEXT,                          -- local/remote
 macaddr TEXT,                           -- macaddr
-newformat TEXT,							-- set to YES for new format SIP entries
-openfirewall TEXT,                      -- not used
 passwd TEXT,                            -- asterisk password
 protocol DEFAULT 'IPV4',				-- IPV4/IPV6
 pjsipuser TEXT,							-- Asterisk PJSIP string							
@@ -288,12 +273,10 @@ AGENTSTART TEXT DEFAULT 6001,	      -- Agent start number
 ALERT TEXT,							      -- not used in 4.x 
 ALLOWHASHXFER TEXT,                 -- Allow asterisk non-SIP xfer
 ASTDLIM TEXT,                       -- Asterisk delimiter ','
-ATTEMPTRESTART TEXT,                -- not used in 4.x 
 BINDADDR TEXT,                      -- Asterisk SIP bindaddr
 BINDPORT TEXT DEFAULT 5060,			-- SIP BINDPORT
 BLINDBUSY TEXT,                     -- blind transfer busy bounce
 BOUNCEALERT TEXT,                   -- alertinfo string for blind transfer bounce
-CALLPARKING TEXT DEFAULT 'YES',		-- turn call parking on/off
 CALLRECORD1 TEXT DEFAULT 'None',	-- call recording defaults
 CAMPONQONOFF TEXT,                  -- camp-on miniqueue enable
 CAMPONQOPT TEXT,                    -- camp-on miniqueue options
@@ -301,42 +284,30 @@ CFWDEXTRNRULE TEXT DEFAULT 'enabled', -- enable call forwards to external target
 CFWDPROGRESS TEXT DEFAULT 'enabled',  -- progress tones for cfwd
 CFWDANSWER TEXT DEFAULT 'enabled',    -- take call off-hook before forward to external
 CLUSTER TEXT DEFAULT 'ON',		    -- tenant support ONOFF
-CLUSTERSTART INTEGER DEFAULT 11,		-- default cluster number
-CONFTYPE TEXT,                      -- conference type - deprecated in 4.1
-CONFSTART INTEGER DEFAULT 08101,		-- conference number start
 COSSTART TEXT DEFAULT 'ON',         -- COS onoff
 COUNTRYCODE INTEGER DEFAULT 44,			-- countrycode
+DYNAMICFEATURES TEXT DEFAULT 'clear#outpause#outresume',  -- Asterisk DYNAMIC_FEATURES string		
 EDOMAIN TEXT,                       -- external IP address of this server
-DIGITS TEXT,
 EMAILALERT TEXT,                    -- email alert address
 EMERGENCY TEXT DEFAULT '999 112 911',  -- emergency numbers which bypass COS
 EXTBLKLST TEXT,
 EXTLEN INTEGER DEFAULT 5,				-- extension length
 EXTLIM TEXT,
-FAX TEXT,							-- FAX flag
-FAXDETECT TEXT,                     -- FAX detect onoff
-FOPPASS INTEGER DEFAULT 1224,			-- Flash opeartor panel password
 FQDN TEXT,							-- FQDN V5+
-FQDNDROPBUFF TEXT,		
 FQDNINSPECT TEXT DEFAULT 'NO',		-- Require FQDN in SIP Ops Shorewall 4.6+
 FQDNHTTP TEXT DEFAULT 'NO',			-- Require FQDN in remote HTTP Ops 
 FQDNPROV TEXT,						-- use FQDN in remote provisioning YES/NO
-HAAUTOFAILBACK TEXT,                -- not used after asha 2
-HAENCRYPT TEXT,
-HACLUSTERIP TEXT,                   -- cluster ip fr HAAster3sk@
-HAMODE TRXT,
-HAPRINODE TEXT,
-HASYNCH TEXT,
-HAUSECLUSTER TEXT,                  -- use cluster virt IP when provisioning
 INTRINGDELAY INTEGER DEFAULT 20,		-- ring time before voicemail
 IVRKEYWAIT INTEGER DEFAULT 6,
 IVRDIGITWAIT INTEGER DEFAULT 6000,
-LACL TEXT,							-- Generate ACLs
 LANGUAGE TEXT DEFAULT 'en-gb',      -- used in extensions.conf 
+LDAPANONBIND TEXT DEFAULT 'YES',    -- anonymous bind YES/NO
 LDAPBASE text DEFAULT 'dc=sark,dc=local',  -- LDAP base
+LDAPHOST TEXT DEFAULT '127.0.0.1',  -- LDAP host
 LDAPOU text DEFAULT 'contacts',     -- LDAP OU
 LDAPUSER text DEFAULT 'admin',		-- LDAP user
 LDAPPASS text DEFAULT 'sarkadmin',	-- LDAP password
+LDAPTLS DEFAULT 'off',              -- LDAP TLS mode(off/on) 
 LEASEHDTIME INTEGER DEFAULT 43200,		-- Hot desk lease time
 LKEY TEXT,							-- not used
 LOCALAREA TEXT,                     -- not used (See Cluster)
@@ -349,8 +320,6 @@ LOGSIPNUMFILES INTEGER DEFAULT 10,		-- number of SIP pcap spins to keep
 LOGSIPFILESIZE INTEGER DEFAULT 20000,	-- SIP pcap max filesize (bytes)
 LTERM TEXT DEFAULT 'NO',			-- late termination flag
 MAXIN TEXT,                         -- maximum inbound calls
-MEETMEDIAL TEXT,
-MISDNRUN TEXT,
 MIXMONITOR TEXT,                    -- force mixmonitor on all recordings
 MONITOROUT TEXT DEFAULT '/var/spool/asterisk/monout', -- monitorout folder
 MONITORSTAGE TEXT DEFAULT '/var/spool/asterisk/monstage', -- monstage folder
@@ -359,11 +328,8 @@ MYCOMMIT TEXT,                      -- commit outstanding
 NATDEFAULT TEXT DEFAULT 'remote', 	-- V6 NAT defaiult local/remote
 NATPARAMS TEXT DEFAULT 'force_rport,comedia', --V6 NAT default remote params
 NUMGROUPS TEXT,
-ONBOARDMENU TEXT,
-OPRT TEXT,
 OPERATOR INTEGER DEFAULT 0,
 PADMINPASS TEXT DEFAULT 'myadminpass',	-- phone browser ADMIN passord
-PCICARDS TEXT,
 PROXY TEXT,
 PUSERPASS TEXT DEFAULT 'myuserpass',	-- phone browser USER passord
 PWDLEN INTEGER DEFAULT 12,				-- password length
@@ -381,30 +347,24 @@ RECQDITHER TEXT,                    -- dither (ms) on queuelog searches
 RECQSEARCHLIM TEXT,                 -- search limit on queuelog
 RESTART TEXT,
 RINGDELAY TEXT,                     -- default ring timeout (seconds)
-RUNFOP TEXT,                        -- generate FOP objects
 SESSIONTIMOUT INTEGER DEFAULT 600,  -- sessiontimeout (10minutes)
 SENDEDOMAIN TEXT DEFAULT 'YES',  	-- Send public IP in SIP header YES/NO
 SIPIAXSTART TEXT,                   -- lowest extension number
 SIPFLOOD TEXT DEFAULT 'NO',			-- detect SIP flood YES/NO
 SIPMULTICAST TEXT,                  -- listen for multicast provisioning requests
 SIPDRIVER TEXT DEFAULT 'PJSIP',		-- SIP backend now PJSIP
-SNO TEXT,
 SPYPASS TEXT,                       -- password for SPY ops
 SITENAME TEXT,                      -- Common name for this site
 STATICIPV4 TEXT DEFAULT NULL,		   -- Static IP to start
 SUPEMAIL TEXT,                      -- supervisor email
 SYSOP INTEGER DEFAULT 201,				-- system operator real extension
 SYSPASS INTEGER DEFAULT 4444,			-- password for sysops
-TFTP TEXT,
 TLSPORT	INTEGER DEFAULT 5061,			-- TLS port (default 5061)
-UNDO TEXT,
-UNDONUM TEXT,
 USEROTP TEXT DEFAULT NULL,			-- V6 default OTP.  Seeded by the generator
 USERCREATE TEXT DEFAULT 'NO',		-- V6 create user when extension created YES/NO		
 VCL TEXT,							-- V5 cloud enabled (true/false)
 VCLFULL TEXT,						-- V5 cloud param
 VDELAY TEXT,                        -- artificial ring on inbound SIP
-VLIBS TEXT,                         -- not used in 4.x 
 VMAILAGE TEXT,                      -- oldest age of vmail
 VOICEINSTR TEXT DEFAULT 'YES',		-- play long or short Vmail instructions
 VOIPMAX INTEGER DEFAULT 30,				-- MAX outbound up calls

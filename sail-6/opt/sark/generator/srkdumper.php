@@ -1,6 +1,6 @@
 <?php
 // +-----------------------------------------------------------------------+
-// |  Copyright (c) CoCoSoft 2005-10                                  |
+// |  Copyright (c) KoKoKraft 2024                                |
 // +-----------------------------------------------------------------------+
 // | This file is free software; you can redistribute it and/or modify     |
 // | it under the terms of the GNU General Public License as published by  |
@@ -11,11 +11,24 @@
 // | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          |
 // | GNU General Public License for more details.                          |
 // +-----------------------------------------------------------------------+
-// | Author: CoCoSoft                                                           |
+// | Author: KoKoKraft                                                           |
 // +-----------------------------------------------------------------------+
 // 
 
+/**
+ *  dumper
+ *  dumps the current sqlitedb into a set of prefixed files.  
+ *  It will obey drops set in the $drops array.   This allows the removal of older columns
+ *  which are no longer used.     
+ */
+
 include("localvars.php");
+
+/**
+ *  Set the prefix to test output.  Default setting is "last_"
+ */
+$prefix='/last_'; 
+
 
 $sysTables = array(
 	"Carrier"  			=> true,			
@@ -26,8 +39,90 @@ $sysTables = array(
 	"vendorxref"  		=> true,
 	"Device_atl"  		=> true
 );
-     
-$prefix='/last_'; 
+
+/**
+ * Deprecated Columns to drop
+ */
+
+ $drops = array 
+	(
+		"globals" => array 
+			(
+				"ATTEMPTRESTART",
+				"CALLPARKING",
+				"CLUSTERSTART",
+				"CONFTYPE",
+				"CONFSTART",
+				"DIGITS",
+				"FAX",
+				"FAXDETECT",
+				"FOPPASS",
+				"FQDNDROPBUFF",
+				"HAAUTOFAILBACK",
+				"HAENCRYPT",
+				"HACLUSTERIP",
+				"HAMODE",
+				"HAPRINODE",
+				"HASYNCH",
+				"HAUSECLUSTER",
+				"LACL",
+				"MEETMEDIAL",
+				"MISDNRUN",
+				"ONBOARDMENU",
+				"OPRT",
+				"PCICARDS",
+				"RUNFOP",
+				"SNO",
+				"TFTP",
+				"UNDO",
+				"UNDONUM",
+				"VDELAY",
+				"VLIBS"
+			),
+		"Carrier" => array
+			(
+				"md5encrypt",
+				"zapcarfixed"	
+			),
+		"Cluster" => array 
+			(
+				"startagent",
+				"startconfroom",
+				"startextension",
+				"startivr",
+				"startparks",
+				"startqueue",
+				"startringgroup"	
+			),
+		"Device" => array
+			(
+				"imageurl",
+				"noproxy",
+				"tftpname",
+				"zapdevfixed"
+			),
+		"IPphone" => array
+			(
+				"newformat",
+				"openfirewall"
+			),
+		"lineIO" => array
+			(
+				"forceivr",
+				"openfirewall",
+				"opengreet",
+				"zapcaruser"
+			)
+	);
+	function in_array_r($needle, $haystack, $strict = false) {
+		foreach ($haystack as $item) {
+			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
+				return true;
+			}
+		}
+	
+		return false;
+	} 
 
 if (isset ($argv[1])) {
 	$rootdir = $argv[1];
@@ -89,6 +184,8 @@ if (isset ($argv[2])) {
  * get a column list for each table
  */		
 	foreach ($tables as $table) {
+
+		echo $table['name'] . "\n";
 
 //	undolog and tt_help_user are gone in V4 - ignore them if this is a V3 upgrade
 		if ( $table['name'] == 'undolog' || $table['name'] == 'tt_help_user') {
@@ -162,14 +259,21 @@ if (isset ($argv[2])) {
 			
 		
 // Build the dump string 	
-		foreach ($rows as $row) {				
+		foreach ($rows as $row) {	
+			$tabname = 	$table['name'];
 			foreach ($colrows as $col) {
 				$myData = $row[$col['name']];
+				$myCol = $col['name'];
+				if 	( in_array_r($myCol,$drops ))	{				
+					echo "dropped column " . $col['name'] . 
+					" from table" . $table['name'] . "\n";
+					continue;
+				}
 				if ($myData) {
 // don't carry forward the create/update time stamps.  They'll cause interlocks on the DB.
-					if ( !preg_match (" /^z_/", $col['name'] )) {
-						$COLDATA .= $col['name'] . ",";
-						$VALDATA .= "'" . $myData . "',";
+					if ( !preg_match (" /^z_/", $col['name'] )) {				
+							$COLDATA .= $col['name'] . ",";
+							$VALDATA .= "'" . $myData . "',";
 					}
 				}
 			}

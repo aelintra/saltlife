@@ -1,10 +1,8 @@
 BEGIN TRANSACTION;
-INSERT OR IGNORE INTO Carrier(pkey,carriertype,desc,technology) values ('AnalogFXO','PSTN','Analogue FXO','Analogue');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,technology) values ('CLID','CLID','CLID','CLID ','NO','CLID');
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,technology) values ('CLID','CLID','CLID','CLID ','CLID');
 INSERT OR IGNORE INTO Carrier(pkey,carriertype,desc,technology) values ('Custom','group','Custom Trunk','Custom');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,technology) values ('DAHDIGroup','DAHDIGroup','group','DAHDI Group','DAHDI');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,technology) values ('DiD','DiD','DiD','DiD ','NO','DiD');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,register,sipiaxpeer,sipiaxuser,technology) values ('GeneralIAX2','GeneralIAX2','VOIP','A general IAX2 carrier','NO','username:password@url/username','type=peer
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,technology) values ('DiD','DiD','DiD','DiD ','DiD');
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,register,sipiaxpeer,sipiaxuser,technology) values ('GeneralIAX2','GeneralIAX2','VOIP','A general IAX2 carrier','username:password@url/username','type=peer
 host=
 qualify=yes
 canreinvite=no
@@ -13,7 +11,7 @@ fromuser=
 secret=','type=user
 context=mainmenu
 requirecalltoken=no','IAX2');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,pjsipuser,register,sipiaxpeer,technology) values ('GeneralSIP','GeneralSIP','VOIP','A general SIP carrier','NO','[$pkey](trunk)
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,pjsipuser,register,sipiaxpeer,technology) values ('GeneralSIP','GeneralSIP','VOIP','A general SIP carrier','[$pkey](trunk)
 sends_auth = yes
 sends_registrations = yes
 endpoint/context = $context
@@ -30,7 +28,7 @@ canreinvite=no
 fromuser=
 secret=
 insecure=port,invite','SIP');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,register,sipiaxpeer,sipiaxuser,technology) values ('IAX2','GeneralIAX2','VOIP','A general IAX2 carrier','NO','username:password@url/username','type=peer
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,register,sipiaxpeer,sipiaxuser,technology) values ('IAX2','GeneralIAX2','VOIP','A general IAX2 carrier','username:password@url/username','type=peer
 host=
 qualify=yes
 canreinvite=no
@@ -38,7 +36,7 @@ username=
 fromuser=
 secret=','type=user
 context=mainmenu','IAX2');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,sipiaxpeer,sipiaxuser,technology) values ('InterSARK','InterSARK','Sibling','Sibling Comms','NO','type=peer
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,sipiaxpeer,sipiaxuser,technology) values ('InterSARK','InterSARK','Sibling','Sibling Comms','type=peer
 host=
 qualify=yes
 canreinvite=no
@@ -49,12 +47,12 @@ trunk=no','type=user
 secret=
 context=internal
 requirecalltoken=no','IAX2');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,technology) values ('WebRTC','WebRTC','WebRTC','WebRTC','NO','WebRTC');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,technology) values ('PTT_CLID','PTT_CLID','CLID','CLID ','NO','CLID');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,technology) values ('PTT_CLID_Class','PTT_CLID_Class','Class','CLID Class ','NO','Class');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,technology) values ('PTT_DiD_Class','PTT_DiD_Class','Class','DiD Class ','NO','Class');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,technology) values ('PTT_DiD_Group','PTT_DiD_Group','DiD','DiD ','NO','DiD');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,register,sipiaxpeer,technology) values ('SIP','SIP','VOIP','A general SIP carrier','NO','username:password@url/username','type=peer
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,technology) values ('WebRTC','WebRTC','WebRTC','WebRTC','WebRTC');
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,technology) values ('PTT_CLID','PTT_CLID','CLID','CLID ','CLID');
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,technology) values ('PTT_CLID_Class','PTT_CLID_Class','Class','CLID Class ','Class');
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,technology) values ('PTT_DiD_Class','PTT_DiD_Class','Class','DiD Class ','Class');
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,technology) values ('PTT_DiD_Group','PTT_DiD_Group','DiD','DiD ','DiD');
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,register,sipiaxpeer,technology) values ('SIP','SIP','VOIP','A general SIP carrier','username:password@url/username','type=peer
 host=
 port=5060
 qualify=yes
@@ -63,7 +61,7 @@ username=
 fromuser=
 secret=
 insecure=port,invite','SIP');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,md5encrypt,sipiaxpeer,sipiaxuser,technology) values ('SailToSail','SailToSail','Sibling','Sibling Comms','NO','type=peer
+INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,sipiaxpeer,sipiaxuser,technology) values ('SailToSail','SailToSail','Sibling','Sibling Comms','type=peer
 host=
 qualify=yes
 canreinvite=no
@@ -74,13 +72,7 @@ trunk=yes','type=user
 secret=
 context=internal
 requirecalltoken=no','IAX2');
-INSERT OR IGNORE INTO Carrier(pkey,carrier,carriertype,desc,sipiaxpeer,technology) values ('mISDN','mISDN','group','msdn drivers','type=peer
-host=
-qualify=yes
-canreinvite=no
-username=
-fromuser=
-secret=','mISDN');
+
 INSERT OR IGNORE INTO mfgmac(pkey,name) values ('00:01:E3','Siemens');
 INSERT OR IGNORE INTO mfgmac(pkey,name,notify) values ('00:04:13','snom','snom-check-cfg');
 INSERT OR IGNORE INTO mfgmac(pkey,name,notify) values ('00:04:F2','Polycom','polycom-check-cfg');

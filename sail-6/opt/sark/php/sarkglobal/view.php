@@ -450,25 +450,14 @@ private function goodEditOutcome($tuple) {
  * update the countrycode in indications
  */ 
 	$rc = $this->helper->request_syscmd ("/bin/sed -i 's/country=\\w\\w/country=" . $tuple['countrycode'] . "/' /etc/asterisk/indications.conf");
-/*
- * 	start/stop multicast listener
- */
-		
-	if ($tuple['sipmulticast'] == "enabled" ) {
-			$this->helper->request_syscmd ( "/bin/rm -f  /etc/service/srk-ua-responder/down" ); 
-	}			
-	else {
-		$this->helper->request_syscmd ( "/usr/bin/sv d  srk-ua-responder" );
-		$this->helper->request_syscmd ( "/bin/touch  /etc/service/srk-ua-responder/down" );							
-    }
-    $this->helper->request_syscmd ( "/usr/bin/sv k  srk-ua-responder" );
+
 }
 
 /*
  *	stop Asterisk
  */
 
-private function sark_stop () {
+private function sark_stop() {
 	
 
 	`/usr/bin/sudo /etc/init.d/asterisk stop`;
