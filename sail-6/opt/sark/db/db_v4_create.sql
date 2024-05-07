@@ -464,7 +464,6 @@ disa TEXT,					-- DISA capable trunk
 disapass TEXT,				-- DISA password
 ext TEXT,					-- unknown, not used	
 faxdetect TEXT,				-- FAX detect for analgue lines
-forceivr TEXT,				-- Not used in 4.x
 host TEXT,					-- Host IP address
 inprefix TEXT,				-- prepend prefix on inbound
 lcl TEXT,					-- denotes a local endpoint (no longer used)
@@ -472,8 +471,6 @@ match TEXT,					-- trunk seize sequence
 method TEXT,				-- referenced in extensions generator but no setter in 4.x
 moh TEXT,					-- play moh instead of ring
 monitor TEXT,				-- referenced in Helper but no setter
-openfirewall TEXT, 			-- not used in 4.0.x+
-opengreet TEXT,				-- default open greeting
 openroute TEXT,				-- open inbound route
 password TEXT,				-- far end password
 pat TEXT,					-- V2; no longer used
@@ -499,7 +496,6 @@ transport TEXT,
 trunk TEXT,					-- old V2 value, no longer used
 trunkname TEXT,				-- freeform trunkname
 username TEXT,				-- far end username
-zapcaruser TEXT,			-- Dahdi creds
 z_created datetime,
 z_updated datetime,
 z_updater TEXT DEFAULT 'system'
