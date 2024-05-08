@@ -450,7 +450,7 @@ active TEXT DEFAULT 'YES',	-- Active/inactive flag
 alertinfo TEXT,				-- distinctive ring
 callback TEXT,				-- denotes callback trunk
 callerid TEXT,				-- high-order (weak) CLID
-callprogress TEXT,			-- send progress tones on dial
+callprogress TEXT DEFAULT 'YES',		-- send progress tones on dial
 carrier TEXT,				-- Foreign key to carrier class
 channel TEXT,
 closeroute TEXT,			-- closed inbound route

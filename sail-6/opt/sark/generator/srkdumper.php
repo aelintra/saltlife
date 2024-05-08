@@ -18,19 +18,19 @@
 /**
  *  dumper
  *  dumps the current sqlitedb into a set of prefixed files.  
- *  It will obey drops set in the $drops array.   This allows the removal of older columns
+ *  It will obey drops set in the $drops array.   This allows the removal of columns
  *  which are no longer used.     
  */
 
 include("localvars.php");
 
 /**
- *  Set the prefix to test output.  Default setting is "last_"
+ *  Set the prefix to test output.  Default setting is "/last_"
  */
 $prefix='/last_'; 
 
 
-$sysTables = array(
+$sysTables = array (
 	"Carrier"  			=> true,			
 	"mfgmac"  			=> true,
 	"Panel"  			=> true,
@@ -44,10 +44,8 @@ $sysTables = array(
  * Deprecated Columns to drop
  */
 
- $drops = array 
-	(
-		"globals" => array 
-			(
+ $drops = array (
+		"globals" => array (
 				"ATTEMPTRESTART",
 				"CALLPARKING",
 				"CLUSTERSTART",
@@ -76,16 +74,13 @@ $sysTables = array(
 				"TFTP",
 				"UNDO",
 				"UNDONUM",
-				"VDELAY",
 				"VLIBS"
 			),
-		"Carrier" => array
-			(
+		"Carrier" => array (
 				"md5encrypt",
 				"zapcarfixed"	
 			),
-		"Cluster" => array 
-			(
+		"Cluster" => array (
 				"startagent",
 				"startconfroom",
 				"startextension",
@@ -94,35 +89,35 @@ $sysTables = array(
 				"startqueue",
 				"startringgroup"	
 			),
-		"Device" => array
-			(
+		"Device" => array (
 				"imageurl",
 				"noproxy",
 				"tftpname",
 				"zapdevfixed"
 			),
-		"IPphone" => array
-			(
+		"IPphone" => array (
 				"newformat",
 				"openfirewall"
 			),
-		"lineIO" => array
-			(
+		"lineIO" => array (
 				"forceivr",
 				"openfirewall",
 				"opengreet",
 				"zapcaruser"
 			)
 	);
-	function in_array_r($needle, $haystack, $strict = false) {
-		foreach ($haystack as $item) {
-			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
-				return true;
+
+	function find_col($col,$tab,$dropstab) {
+		foreach ($dropstab as $key => $row) {
+			if ($key == $tab) {
+				if (in_array($col,$row)) {
+					return true;
+				}
 			}
+			
 		}
-	
 		return false;
-	} 
+	}
 
 if (isset ($argv[1])) {
 	$rootdir = $argv[1];
@@ -163,7 +158,7 @@ if (isset ($argv[2])) {
 	$DEVINSERT 	= "BEGIN TRANSACTION;\n";
 	$CUSTDEVINSERT 	= "BEGIN TRANSACTION;\n";
 
-// create the teblesdirectory if it does not exist
+// create the tablesdirectory if it does not exist
 	if (is_dir($tablesdirectory)) {
 		`rm -rf $tablesdirectory`;
 	}
@@ -184,8 +179,6 @@ if (isset ($argv[2])) {
  * get a column list for each table
  */		
 	foreach ($tables as $table) {
-
-		echo $table['name'] . "\n";
 
 //	undolog and tt_help_user are gone in V4 - ignore them if this is a V3 upgrade
 		if ( $table['name'] == 'undolog' || $table['name'] == 'tt_help_user') {
@@ -264,7 +257,7 @@ if (isset ($argv[2])) {
 			foreach ($colrows as $col) {
 				$myData = $row[$col['name']];
 				$myCol = $col['name'];
-				if 	( in_array_r($myCol,$drops ))	{				
+				if 	( find_col($myCol,$tabname,$drops))	{				
 					echo "dropped column " . $col['name'] . 
 					" from table" . $table['name'] . "\n";
 					continue;
@@ -347,13 +340,5 @@ if (isset ($argv[2])) {
 	`dos2unix $devfilename >/dev/null 2>&1`;
 	`dos2unix $custdevfilename >/dev/null 2>&1`;	
 	`dos2unix $sysfilename >/dev/null 2>&1`;
-		
-/*
-}
-
-catch(PDOException $e)
-    {
-    echo "fail on try " .  $e->getMessage();
-    }
-*/    
+		  
 ?>		
