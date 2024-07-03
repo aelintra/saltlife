@@ -1,0 +1,3 @@
+BEGIN TRANSACTION;
+INSERT OR IGNORE INTO sysuser(id,pkey,email,password,salt) values ('3f8b492a-5098-4417-87f2-ee295c06b555','admin','admin@yourco.com','f9d00b85a314b0ea492159a475a8e9301c9ac579759043ba902f445eb629ad6e','4b78f15c5dbaf8ac');
+COMMIT;

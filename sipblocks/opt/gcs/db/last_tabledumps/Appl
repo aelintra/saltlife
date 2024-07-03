@@ -1,0 +1,13 @@
+BEGIN TRANSACTION;
+INSERT OR IGNORE INTO Appl(id,pkey,cluster,extcode,span,striptags) values ('067bf73a-1618-459e-b291-ac8c89b653d1','ContextDumpBadCaller','Breeders','exten => s,1,Answer(500)
+     same => n,Playback(silence/2)
+     same => n,Hangup()
+','Neither','NO');
+INSERT OR IGNORE INTO Appl(id,pkey,cluster,extcode,span,striptags) values ('d41e2ad4-af66-4603-81b1-2ef660ff104a','DumpBadCallers','default','exten => _00334268478XX,1,Answer()
+exten => _00334268478XX,n,Hangup()
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;; BAD CALLERS ABOVE THIS LINE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+include => mainmenu
+','Neither','NO');
+COMMIT;

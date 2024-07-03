@@ -1,0 +1,17 @@
+#!/bin/bash
+
+sv d srk-ua-responder
+sv d srk-ua-helper
+
+rm -rf /etc/apache2/sites-enabled/gcs*
+rm -rf /etc/apache2/sites-available/gcs*
+
+[ -L /etc/cron.d/gcs ] && rm -rf /etc/cron.d/gcs
+
+rm -rf /etc/service/srk*
+
+[ -L /etc/fail2ban/jail.local ] && rm -rf /etc/fail2ban/jail.local
+[ -L /etc/fail2ban/action.d/shorewall.local ] && rm -rf /etc/fail2ban/action.d/shorewall.local
+[ -L /etc/fail2ban/filter.d/asterisk.conf ] && /etc/fail2ban/filter.d/asterisk.conf 
+
+systemctl disable  debsetlan

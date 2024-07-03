@@ -1,0 +1,314 @@
+#!/bin/bash
+
+PREFIX=/opt/gcs
+
+
+# turn on VCL in Globals
+    echo "AWS instance detected, setting cloud flags"
+    /usr/bin/sqlite3 $PREFIX/db/sqlite.db "update globals set VCL=1"
+
+
+#Copy Asterisk file fragments
+ ! -e $PREFIX/otrr/var/spool/asterisk/monitor ] && mkdir -p $PREFIX/otrr/var/spool/asterisk/monitor
+[ ! -e $PREFIX/mixmon/var/spool/asterisk/monitor ] && mkdir -p $PREFIX/mixmon/var/spool/asterisk/monitor
+[ ! -e /var/spool/asterisk/monstage ] && mkdir -p /var/spool/asterisk/monstage
+[ ! -e /var/spool/asterisk/monout ] && mkdir -p /var/spool/asterisk/monout
+[ ! -e /usr/share/asterisk/moh-default ] && mkdir -p /usr/share/asterisk/moh-default
+[ ! -e $PREFIX/passwd/htpasswd ] && cp -f $PREFIX/cache/htpasswd $PREFIX/passwd/htpasswd
+[ ! -e $PREFIX/bkup ] && mkdir -p $PREFIX/bkup
+[ ! -e $PREFIX/snap ] && mkdir -p $PREFIX/snap
+
+if [ ! -e /etc/asterisk/gcs_customer_iax_header.conf ]; then 
+        cp -f $PREFIX/cache/template_cust.conf /etc/asterisk/gcs_customer_iax_header.conf
+        echo "language=en-gb" >> /etc/asterisk/gcs_customer_iax_header.conf
+fi
+
+if [ ! -e /etc/asterisk/gcs_customer_sip_header.conf ]; then
+        cp -f $PREFIX/cache/template_cust.conf /etc/asterisk/gcs_customer_sip_header.conf
+        echo "language=en-gb" >> /etc/asterisk/gcs_customer_sip_header.conf
+fi
+
+usermod -a -G asterisk www-data
+
+# added in 5.0.0-21 for hotdesk 
+usermod -a -G www-data asterisk
+
+
+[ -e /etc/dahdi ] && chown -R asterisk:asterisk /etc/dahdi
+[ -e /etc/ssmtp/ssmtp.conf ] && chown www-data:www-data /etc/ssmtp/ssmtp.conf && chmod 660 /etc/ssmtp/ssmtp.conf
+
+chown -R www-data:www-data $PREFIX/www
+chown -R www-data:www-data $PREFIX/db
+chown -R www-data:www-data $PREFIX/passwd
+chown -R www-data:www-data $PREFIX/cache
+
+chown -R asterisk:asterisk $PREFIX/otrr/var/spool/asterisk/monitor 
+chown -R asterisk:asterisk $PREFIX/mixmon/var/spool/asterisk/monitor 
+
+chown -R asterisk:asterisk /etc/asterisk/*
+chown -R asterisk:asterisk /var/lib/asterisk
+chown -R asterisk:asterisk /usr/share/asterisk/sounds
+chown -R asterisk:asterisk /var/log/asterisk
+chown -R asterisk:asterisk /var/spool/asterisk
+
+chmod 664 -R /etc/asterisk/*
+chmod +x /etc/asterisk/manager.d
+chmod 755 -R $PREFIX/www
+chmod 755 -R $PREFIX/generator
+chmod 755 -R $PREFIX/perl
+chmod 755 -R $PREFIX/scripts
+
+grep -q '#include sark_manager.conf' /etc/asterisk/manager.conf
+if [  "$?" -ne "0" ] ; then
+        cp -f $PREFIX/cache/manager.conf /etc/asterisk
+fi
+
+grep -q '#include sark_sip_notify.conf' /etc/asterisk/sip_notify.conf
+if [  "$?" -ne "0" ] ; then
+        echo "#include sark_sip_notify.conf" >> /etc/asterisk/sip_notify.conf
+fi
+
+grep -q '#include sark_cdr.conf' /etc/asterisk/cdr.conf
+if [  "$?" -ne "0" ] ; then
+        echo "#include sark_cdr.conf" >> /etc/asterisk/cdr.conf
+        echo "enable=no" > /etc/asterisk/sark_cdr.conf
+fi
+
+grep -q '#include sark_moh.conf' /etc/asterisk/musiconhold.conf
+if [  "$?" -ne "0" ] ; then
+        echo "#include sark_moh.conf" >> /etc/asterisk/musiconhold.conf
+fi
+
+if [ -e /etc/asterisk/confbridge.conf ] ; then
+    grep -q '#include sark_confbridge.conf' /etc/asterisk/confbridge.conf
+    if [  "$?" -ne "0" ] ; then
+        echo "#include sark_confbridge.conf" >> /etc/asterisk/confbridge.conf
+    fi
+fi
+ 
+chmod +x $PREFIX/service/srk-ua-helper/run 
+chmod +x $PREFIX/service/srk-ua-responder/run
+chmod +x $PREFIX/service/srk-ua-siplog/run
+
+# link the helpers if they don't exist 
+[ ! -L /etc/service/srk-ua-helper ] && ln -s $PREFIX/service/srk-ua-helper /etc/service
+[ ! -L /etc/service/srk-ua-responder ] && ln -s $PREFIX/service/srk-ua-responder /etc/service
+[ ! -L /etc/service/srk-ua-siplog ] && ln -s $PREFIX/service/srk-ua-siplog /etc/service
+
+# 
+# deal with Apache
+# 
+
+# disable defaults
+a2dissite 000-default
+a2dissite default-ssl.conf
+
+# set the snakeoil permissions so Apache can read the key
+chmod 750 /etc/ssl/private
+usermod -a -G ssl-cert www-data
+
+# remove any previous sark references
+rm -rf /etc/apache2/sites-enabled/sark*
+rm -rf /etc/apache2/sites-available/sark*
+
+# link our sites
+[ ! -L /etc/apache2/sites-available/sark-certs.conf ] && ln -s $PREFIX/etc/apache2/sites-available/sark-certs.conf /etc/apache2/sites-available
+[ ! -L /etc/apache2/sites-available/sark-default-ssl.conf ] && ln -s $PREFIX/etc/apache2/sites-available/sark-default-ssl.conf /etc/apache2/sites-available
+[ ! -L /etc/apache2/sites-available/sark-http.conf ] && ln -s $PREFIX/etc/apache2/sites-available/sark-http.conf /etc/apache2/sites-available
+[ ! -L /etc/apache2/sites-available/sark-name.conf ] && ln -s $PREFIX/etc/apache2/sites-available/sark-name.conf /etc/apache2/sites-available
+[ ! -L /etc/apache2/sites-available/sark-ssl.conf ] && ln -s $PREFIX/etc/apache2/sites-available/sark-ssl.conf /etc/apache2/sites-available
+[ ! -L /etc/apache2/sites-available/sark-prov-ssl.conf ] && ln -s $PREFIX/etc/apache2/sites-available/sark-prov-ssl.conf /etc/apache2/sites-available
+
+# Use our versions of asterisk/modules, asterisk/http & asterisk/pjsip
+
+[ ! -e /etc/asterisk/modules.install.conf ] && mv /etc/asterisk/modules.conf /etc/asterisk/modules.install.conf
+[ ! -L /etc/asterisk/modules.conf ] && ln -s /etc/asterisk/sark_modules.conf /etc/asterisk/modules.conf
+[ ! -e /etc/asterisk/http.install.conf ] && mv /etc/asterisk/http.conf /etc/asterisk/http.install.conf
+[ ! -L /etc/asterisk/http.conf ] && ln -s /etc/asterisk/sark_http.conf /etc/asterisk/http.conf
+[ ! -e /etc/asterisk/pjsip.install.conf ] && mv /etc/asterisk/pjsip.conf /etc/asterisk/pjsip.install.conf
+[ ! -L /etc/asterisk/pjsip.conf ] && ln -s /etc/asterisk/sark_pjsip.conf /etc/asterisk/pjsip.conf
+
+
+# enable sark apache fragments
+a2ensite sark-http
+a2ensite sark-ssl
+a2ensite sark-name
+
+# enable sark opional fragments for certificates 
+if [ -e /etc/ssl/certs/ssl-cert-sark-customer.pem ]; then
+    a2ensite sark-certs
+    a2dissite sark-default-ssl
+else 
+    a2ensite sark-default-ssl
+fi
+
+if [ -e /etc/ssl/3pcerts/3pcerts.pem ]; then
+    a2ensite sark-prov-ssl
+else 
+    a2dissite sark-prov-ssl
+fi
+
+#HTTPD
+a2enmod rewrite > /dev/null 2>&1
+a2enmod proxy > /dev/null 2>&1
+a2enmod proxy_http > /dev/null 2>&1
+
+#HTTPS
+a2enmod ssl
+
+#enable listening on IPV6 for apache
+sed -i 's/Listen 80/Listen [::]:80/' /etc/apache2/ports.conf
+sed -i 's/Listen 443/Listen [::]:443/' /etc/apache2/ports.conf
+
+[ ! -e /etc/ssl/3pcerts ] && mkdir /etc/ssl/3pcerts 
+
+systemctl enable apache2.service
+systemctl stop apache2.service
+systemctl start apache2.service
+
+
+
+# Generate and sign SIP/TLS certificates
+#
+if [ ! -e /etc/asterisk/ssl ]; then
+    mkdir /etc/asterisk/ssl
+    echo 00 > /etc/asterisk/ssl/file.srl
+    openssl req \
+        -new \
+        -days 3650 \
+        -x509 \
+        -out /etc/asterisk/ssl/ca.pem \
+        -passin pass:artichok3 \
+        -passout pass:artichok3 \
+        -subj "/C=GB/ST=Yorkshire/L=Leeds/O=Aelintra/CN=sark.local" > /dev/null 2>&1
+    openssl genrsa -out /etc/asterisk/ssl/server.key 2048 > /dev/null 2>&1
+    openssl req \
+        -key /etc/asterisk/ssl/server.key \
+        -new \
+        -out /etc/asterisk/ssl/server.req \
+        -days 3650 \
+        -subj "/C=GB/ST=Yorkshire/L=Leeds/O=Aelintra/CN=aelintra.com" > /dev/null 2>&1
+    openssl x509 -req \
+        -in /etc/asterisk/ssl/server.req \
+        -CA /etc/asterisk/ssl/ca.pem \
+        -CAkey privkey.pem \
+        -CAserial /etc/asterisk/ssl/file.srl \
+        -passin pass:artichok3 \
+        -out /etc/asterisk/ssl/server.pem \
+        -days 3650 > /dev/null 2>&1
+fi
+chown -R asterisk:asterisk /etc/asterisk/ssl
+chmod 511 /etc/asterisk/ssl
+chmod 400 /etc/asterisk/ssl/*
+
+#reverse proxy port perms
+chown asterisk:asterisk $PREFIX/service/rssh/serviceport1
+
+#handle multiple NICs
+if [ ! -e /etc/network/interfaces.d ]; then
+    mkdir -p /etc/network/interfaces.d
+    echo "source /etc/network/interfaces.d/*" >> /etc/network/interfaces
+fi
+    
+# set correct Asterisk dateformat in logger.conf
+sed -i 's/^;dateformat=%F %T /dateformat=%F %T/' /etc/asterisk/logger.conf
+# set security logging for Ast11 
+sed -i '/^messages/c \messages => security,notice,warning,error' /etc/asterisk/logger.conf;
+/usr/sbin/asterisk -rx 'logger reload'
+
+#Shorewall setup
+if [ -d /etc/shorewall ]; then
+    sed -i 's/startup=0/startup=1/' /etc/default/shorewall
+    echo 'INCLUDE local.lan' > /etc/shorewall/params
+    echo 'INCLUDE local.if1' >> /etc/shorewall/params
+
+    cp -f $PREFIX/etc/shorewall/rules /etc/shorewall
+    [ ! -e /etc/shorewall/gcs_rules ] && cp $PREFIX/etc/shorewall/gcs_rules /etc/shorewall
+    touch /etc/shorewall/gcs_inline_fqdn
+    touch /etc/shorewall/gcs_inline_limit
+    chown www-data:www-data /etc/shorewall/gcs_rules
+    chown www-data:www-data /etc/shorewall/gcs_inline_fqdn
+    chown www-data:www-data /etc/shorewall/gcs_inline_limit
+fi
+
+#Rebuild the SARK database
+/bin/sh $PREFIX/scripts/gcsreloader.sh
+chmod 775 $PREFIX/db
+chmod 664 $PREFIX/db/sqlite.db
+
+# enable setlan
+echo running setlan to resolve IP addresses
+systemctl enable debsetlan.service
+systemctl start debsetlan.service
+sleep 10
+
+#Shorewall6 setup
+if [ -d /etc/shorewall6 ]; then
+# the rules file always gets refreshed
+# 
+    cp -f $PREFIX/etc/shorewall6/rules /etc/shorewall6
+    sed -i 's/startup=0/startup=1/' /etc/default/shorewall6
+    for file in `ls $PREFIX/etc/shorewall6/` ; do
+                [ ! -e /etc/shorewall6/$file ] && cp -f $PREFIX/etc/shorewall6/$file /etc/shorewall6            
+    done    
+    chown www-data:www-data /etc/shorewall6/gcs_rules6
+
+fi
+
+#run shorewall's own fix routines
+shorewall update
+
+# F2b setup
+[ -e /etc/fail2ban/jail.local ] && rm -rf /etc/fail2ban/jail.local && echo "replacing F2B jail.local" 
+ln -s $PREFIX/etc/fail2ban/jail-stretch.local /etc/fail2ban/jail.local
+[ ! -e /etc/fail2ban/action.d/shorewall.local ] && [ -e $PREFIX/etc/fail2ban/action.d/shorewall-jessie.local ] && ln -s $PREFIX/etc/fail2ban/action.d/shorewall-jessie.local /etc/fail2ban/action.d/shorewall.local
+
+
+# Asterisk 11+ call parks
+[ ! -e /etc/asterisk/res_parking.conf ] && touch /etc/asterisk/res_parking.conf
+grep -q '#include gcs_res_parking.conf' /etc/asterisk/res_parking.conf
+if [  "$?" -ne "0" ] ; then
+    echo "#include gcs_res_parking.conf" >> /etc/asterisk/res_parking.conf
+fi
+
+
+# enable shorewall
+[ -e  /etc/shorewall/routestopped ] && mv /etc/shorewall/routestopped /etc/shorewall/routestopped.bak
+systemctl enable shorewall.service
+systemctl enable shorewall6.service
+
+
+# suppress CDR menu generation for Deb 9 and ubuntu 
+[ -e $PREFIX/cache/1520813339.db_v4_admin_perms2 ] && mv $PREFIX/cache/1520813339.db_v4_admin_perms2 $PREFIX/always/
+
+
+
+#Make the public directories if they aren't there
+[ ! -d $PREFIX/public ] && mkdir $PREFIX/public && chown www-data:www-data $PREFIX/public
+[ ! -d $PREFIX/public/aastra ] && mkdir $PREFIX/public/aastra && chown www-data:www-data $PREFIX/public/aastra
+[ ! -d $PREFIX/public/cisco ] && mkdir $PREFIX/public/cisco && chown www-data:www-data $PREFIX/public/cisco
+[ ! -d $PREFIX/public/panasonic ] && mkdir $PREFIX/public/panasonic && chown www-data:www-data $PREFIX/public/panasonic
+[ ! -d $PREFIX/public/polycom ] && mkdir $PREFIX/public/polycom && chown www-data:www-data $PREFIX/public/polycom
+[ ! -d $PREFIX/public/snom ] && mkdir $PREFIX/public/snom && chown www-data:www-data $PREFIX/public/snom
+[ ! -d $PREFIX/public/vtech ] && mkdir $PREFIX/public/vtech && chown www-data:www-data $PREFIX/public/vtech
+[ ! -d $PREFIX/public/yealink ] && mkdir $PREFIX/public/yealink && chown www-data:www-data $PREFIX/public/yealink
+
+# call recording 
+[ ! -d $PREFIX/media/recordings/default ] && mkdir -p $PREFIX/media/recordings/default
+
+#stop and restart the helper to reset the socket
+sv d srk-ua-helper
+sleep 1
+sv u srk-ua-helper
+
+#stop systemd.resolved - it interferes with dnsmasq
+systemctl stop systemd-resolved
+systemctl disable systemd-resolved
+#restart dnsmasq
+systemctl enable dnsmasq
+systemctl restart dnsmasq
+
+
+
+#Install date
+date --iso-8601=minutes > $PREFIX/db/.gcs-install-date

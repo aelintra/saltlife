@@ -1,0 +1,35 @@
+#
+#  Firewall Rules.   
+#  GCS uses the Shorewall Firewall.  
+#  You can learn about Shorewall at  
+#  	www.shorewall.net
+#
+#  GCS exposes only the Shorewall rules "include" files in the API.
+#  If you wish to do more with Shorewall then you should access the  
+#  control files directly by opening an SSH port and accessing 
+#  them as root.
+#
+#  The rules below can be set to suit your installation.  
+#
+?SECTION ALL
+INCLUDE gcs_inline_limit 
+#?SECTION ESTABLISHED
+#?SECTION RELATED
+?SECTION NEW
+INCLUDE gcs_inline_fqdn
+
+
+# Reject Ping from the "bad" net zone.. and prevent your log from being flooded..
+
+Ping/REJECT	net		$FW
+
+# Permit all ICMP traffic FROM the firewall TO the net zone
+
+ACCEPT		$FW		net		icmp
+
+#GCS include - DO NOT remove!
+INCLUDE gcs_rules
+
+
+
+#LAST LINE -- ADD YOUR ENTRIES BEFORE THIS ONE -- DO NOT REMOVE
