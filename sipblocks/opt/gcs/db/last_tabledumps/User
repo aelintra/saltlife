@@ -1,3 +1,0 @@
-BEGIN TRANSACTION;
-INSERT OR IGNORE INTO User(id,pkey,email,lastlogin,password,salt) values ('4ead91a8-d7ba-46b5-9f2f-012126a40d70','admin','admin@yourco.com','2024-06-20 18:45:54','8ef23d32d3f32184cead6bb324cde3fe80786fe69748e4c08fd96b16775b6f1f','6e3e876f776022d4');
-COMMIT;

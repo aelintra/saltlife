@@ -1,3 +1,0 @@
-BEGIN TRANSACTION;
-INSERT OR IGNORE INTO meetme(id,pkey,cluster,adminpin,description,pin,type) values ('dda6912f-247e-49f9-ad3b-cf01106c08c1','33904','default','None','M1','None','simple');
-COMMIT;

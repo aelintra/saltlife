@@ -1,3 +1,0 @@
-BEGIN TRANSACTION;
-INSERT OR IGNORE INTO speed(id,pkey,cluster,devicerec,dialparamshunt,dialparamsring,grouptype,outcomerouteclass,ringdelay) values ('435bad2a-17da-4325-b590-e9999faa80b4','23','default','default','cIkt','ciIkt','Ring','100','20');
-COMMIT;
