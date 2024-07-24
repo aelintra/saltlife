@@ -44,12 +44,6 @@ if (empty($global)) {
   send404();
   exit(1);
 }
-/**
- * HA clusters are gone in the cloud world
- * 
-$haclusterip = $global['HACLUSTERIP'];
-$hausecluster = $global['HAUSECLUSTER'];
- */
 
 $bindport = $global['BINDPORT'];
 $externip = $global['EDOMAIN'];

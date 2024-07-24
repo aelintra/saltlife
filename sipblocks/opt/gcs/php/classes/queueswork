@@ -1,0 +1,66 @@
+<?php
+/**
+ * Copy file template to named queue file
+ * @param  array $tuple queue row
+ * @return bool  
+ */
+public function createQInstance($tuple) {
+
+
+	$templateFile = QUEUE_TEMPLATE;					
+
+	$targetFile = ASTQUEUES . '/' . $tuple['pkey'] . '_' . QUEUE;
+
+	if (!file_exists($targetFile) || 0 == filesize( $targetFile )) {
+		$rc = $this->request_syscmd ("/bin/cp $templateFile $targetFile >/dev/null 2>&1");		
+		$rc = $this->request_syscmd ("/bin/chown asterisk:asterisk $targetFile >/dev/null 2>&1");
+		$rc = $this->request_syscmd ("/bin/chmod 664 $targetFile >/dev/null 2>&1");
+		return true;
+	}
+	return false;
+} 
+
+/**
+ * get named pjsip template
+ * @param  array $tuple Trunk row
+ * @return bool  
+ */
+public function getQInstance($tuple) {
+
+	$targetFile = ASTQUEUES . '/' . $tuple['pkey'] . '_' . QUEUE;
+	if (!file_exists($targetFile)) {		
+		$this->createQInstance($tuple);
+	}
+	if (file_exists($targetFile)) {
+		return file_get_contents($targetFile);
+	}
+	return false;
+} 
+
+/**
+ * set named pjsip template
+ * @param  array $tuple Trunk row
+ * @return bool  
+ */
+public function setQInstance($key,$data) {
+	
+	$targetFile = ASTQUEUES . '/' . $tuple['pkey'] . '_' . QUEUE;
+	$fh = fopen($targetFile, 'w') or die("Could not open file $targetFile!");
+	fwrite($fh,$data) or die("Could not write to file $targetFile !");
+	fclose($fh);
+	return True;	
+} 
+
+/**
+ * delete named pjsip template
+ * @param  array $tuple Trunk row
+ * @return RC  
+ */
+public function deleteQInstance($key) {
+
+	$targetFile = ASTQUEUES . '/' . $tuple['pkey'] . '_' . QUEUE;
+	if (file_exists($targetFile)) {
+		return $this->request_syscmd ("/bin/rm $targetFile >/dev/null 2>&1");
+	}
+	return False;	
+}

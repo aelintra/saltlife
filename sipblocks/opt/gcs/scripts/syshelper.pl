@@ -1,10 +1,10 @@
 #!/usr/bin/perl
-#srkhelper.pl
+#syshelper.pl
 
 use IO::Socket::INET;
 use POSIX qw(setsid);
 
-my $app_name = 'sark-ua-helper';
+my $app_name = 'sys-ua-helper';
 $0 = $app_name;
 my $t;
 # flush after every write
@@ -15,7 +15,7 @@ my $debug=1;
 # open logs
 
 open STDIN, '/dev/null'   or die "$t Can't read /dev/null: $!";
-open STDOUT, '>>/var/log/srkhelper.log' or die "$t/tSHADOW102 ==> Can't write to log: $!\n";
+open STDOUT, '>>/var/log/syshelper.log' or die "$t/tSHADOW102 ==> Can't write to log: $!\n";
 
 if ($ARGV[0] && $ARGV[0] eq '--daemonize') {
 	daemonize();
@@ -44,7 +44,7 @@ Listen => 5,
 Reuse => 1
 ) or die "ERROR in Socket Creation : $!\n";
 
-print "$t SRKHELPER started and Waiting for client connection \n";
+print "$t sysHELPER started and Waiting for client connection \n";
 
 while(1)
 {

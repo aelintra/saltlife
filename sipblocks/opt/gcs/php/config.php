@@ -5,47 +5,76 @@
  */
 
 define('SYSNAME',                       'sipblocks');
+define('KEYTYPE',                       'pkey');
+define('SYSAGI',                        'gcsagi');
+
 define('SYSROOT',                       '/opt');
 define('SYSPREFIX',                     '/gcs');
 define('SYSPATH',                       SYSROOT . SYSPREFIX);
 
+
+define('PHP',                           SYSPATH . '/php');                   
 define('SCRIPTS',                       SYSPATH . '/scripts');
 define('BASHCONFIG',                    SCRIPTS . '/bashconfig');
-define('PHP',                           SYSPATH . '/php');
-define('GENERATOR',                     SYSPATH . '/generator');
+
+
+define('CLASSES',                       PHP . '/classes');
+define('GENERATOR',                     PHP . '/generator');
+define('UTILITIES',                     PHP . '/utilities');        
+
 define('SNAPSHOTS', 			        SYSPATH . '/snap');
 define('BACKUPS', 						SYSPATH . '/bkup');
+define('CACHE', 						SYSPATH . '/cache');
 define('DBPATH', 						SYSPATH . '/db');
 define('SYSDB',						    DBPATH .  '/sqlite.db'); 
 define('READONLY_DB',				    DBPATH .  '/sqlite.rdonly.db');
+define('COPY_DB',				        DBPATH .  '/sqlite.copy.db');
 
-define ('AMIHELPER',                    PHP . '/AmiHelperClass');
-define ('ASTMANAGER',                   PHP . '/AsteriskManager.php');
-define ('DBCLASS',                      PHP . '/DbClass');
-define ('GENCLASS',                     PHP . '/GenClass');
-define ('HELPER',                       PHP . '/HelperClass');
-define ('LDAPHELPER',                   PHP . '/LDAPHelperClass');
-define ('NETHELPER',                    PHP . '/NetHelperClass');
+define ('AMIHELPER',                    CLASSES . '/AmiHelperClass');
+define ('ASTMANAGER',                   CLASSES . '/AsteriskManager.php');
+define ('DBCLASS',                      CLASSES . '/DbClass');
+define ('GENCLASS',                     CLASSES . '/GenClass');
+define ('HELPER',                       CLASSES . '/HelperClass');
+define ('LDAPHELPER',                   CLASSES . '/LDAPHelperClass');
+define ('NETHELPER',                    CLASSES . '/NetHelperClass');
 
 define('EXEC_DB_RELOAD',				SCRIPTS . '/reloader.sh');
 
 define('ASTCONF',                       '/etc/asterisk');
-define('ASTWORK',                       SYSPATH . ASTCONF . '/workfiles/');
 define('ASTMPL',                        SYSPATH . ASTCONF . '/templates');
 define('ASTLOCALCONF',                  SYSPATH . ASTCONF . '/configs');
-define('ASTEXTCONF',                    ASTLOCALCONF . '/extensions.conf');
+define('ASTENDPOINTS',                  SYSPATH . ASTCONF . '/endpoints');
+define('ASTQUEUES',                     SYSPATH . ASTCONF . '/queues');
+define('ASTTRUNKS',                     SYSPATH . ASTCONF . '/trunks');
+define('ASTIAX',                        SYSPATH . ASTCONF . '/iax_trunks');
+define('ASTPARKS',                      SYSPATH . ASTCONF . '/callparks');
 
+define('QUEUE',                         'queue.conf');
+define('QUEUE_TEMPLATE',                ASTMPL . '/queue.tmpl');
+define('READY_QUEUES',                  ASTLOCALCONF . '/ready_queues.conf');
+
+define('PARK',                         'parking.conf');
+define('PARK_TEMPLATE',                 ASTMPL . '/parking_lot.tmpl');
+define('READY_PARKS',                   ASTLOCALCONF . '/ready_parks.conf');
+
+define('IAX_TRUNK',					    'trunk.conf');
+define('IAX_TRUNK_SNDREG_TEMPLATE',	    ASTMPL . '/iax_trunk_sndreg.tmpl');
+define('IAX_TRUNK_RCVREG_TEMPLATE',	    ASTMPL . '/iax_trunk_rcvreg.tmpl');
+define('IAX_TRUNK_TRUSTED_TEMPLATE',	ASTMPL . '/iax_trunk_trusted.tmpl');
+define('IAX_READY_TRUNKS',              ASTLOCALCONF . '/iax_ready_trunks.conf');
+
+define('ASTEXTCONF',                    ASTLOCALCONF . '/extensions.conf');
 define('ASTEXEC',                       '/usr/sbin/asterisk');
 define('ASTSHARE',                      '/usr/share/asterisk');
 define('ASTSPOOL',                      '/var/spool/asterisk');
 define('ASTLOGS',                       '/var/log/asterisk');
-
 define('MONITOR',			            ASTSPOOL . '/monitor/');
 define('MONOUT',		                ASTSPOOL . '/monout/');
 define('MONSTAGE',						ASTSPOOL . '/monstage/');
 define('CDR',						    ASTLOGS . '/cdr-csv/master.csv');
 define ('BACKUP',                       '/backup');
 define ('RECORDINGS',                   '/recordings');
+define ('DELETES',                      '/deletes');
 define ('ASTCDR',                       '/cdr');
 
 /**
@@ -77,9 +106,11 @@ define('PJSIP_READY_TRUNKS',            ASTLOCALCONF . '/pjsip_ready_trunks.conf
 
 define('SOUNDIR',                       '/usr/share/asterisk' . SYSPREFIX . '/sounds/');
 
-// BASH params
+/**
+ * BASH params
+ */
 
-define('LASTDB',                        DBPATH . '/db_vx_last.db');    //sark db previous release
+define('LASTDB',                        DBPATH . '/db_vx_last.db');    //sark db previous iteration
 define('CLEANDB',                       DBPATH . '/db_vx_clean.db');	//factory reset copy of the db 
 define('CREATEDB',                      DBPATH . '/db_vx_create.sql');	    //installed db create
 define('SYSTEMDB',                      DBPATH . '/db_vx_system.sql');		//installed db system data
@@ -89,10 +120,11 @@ define('SYSDEVICE',                     DBPATH . '/db_vx_device.sql');	    //ins
 define('SYSONCE',                       SYSPATH . '/once');				    //once directory
 define('SYSALWAYS',                     SYSPATH . '/always');					//always directory
 define('SYSONCEDONE',                   SYSPATH . '/oncedone');				//applied once files
-define('CUSTDATA',                      DBPATH . '/last_data.sql');			//customer data previous release
-define('LASTDEVICE',                    DBPATH . '/last_device.sql');			//device table previous release      
-define('CUSTDEVICE',                    DBPATH . '/last_custdevice.sql');	    //customer devices previous release
-define('DUMPER',                        GENERATOR .'/dumper.php'); 	//loc. of the dumper
-define('SIPFIX',                        GENERATOR . '/srksipiaxfix.php'); 	//loc. of the V6 sipiaxfixup routine
-define('GENAST',                        SCRIPTS . '/genAst');		//loc. of the generator
+define('CUSTDATA',                      DBPATH . '/last_data.sql');			//customer data previous iteration
+define('LASTDEVICE',                    DBPATH . '/last_device.sql');			//device table previous iteration      
+define('CUSTDEVICE',                    DBPATH . '/last_custdevice.sql');	    //customer devices previous iteration
+define('DUMPER',                        GENERATOR . '/dumper.php'); 	//loc. of the dumper
+define('APACHEGEN',                     GENERATOR . '/runApacheGen.php');
+define('SIPFIX',                        UTILITIES . '/sipiaxfix.php'); 	//loc. of the V6 sipiaxfixup routine
+define('GENAST',                        SCRIPTS . '/genAst.sh');		//loc. of the generator
 define('HTTPOWNER',                     'www-data:www-data');		//apache user/group (Deb/Ubu)q
