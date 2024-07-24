@@ -1,3 +1,6 @@
-pjsip_ready*
+*ready*
+ready*
 *extra.conf
+extensions.conf
 vmail*
+voicemail.conf
