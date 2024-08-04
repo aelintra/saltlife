@@ -12,11 +12,12 @@ define('SYSROOT',                       '/opt');
 define('SYSPREFIX',                     '/gcs');
 define('SYSPATH',                       SYSROOT . SYSPREFIX);
 
+define('INSTANCEID',                    SYSPATH . 'etc/identity/instance-id.txt');
+define('DOMAINID',                      SYSPATH . 'etc/identity/idomain-id.txt');
 
 define('PHP',                           SYSPATH . '/php');                   
 define('SCRIPTS',                       SYSPATH . '/scripts');
 define('BASHCONFIG',                    SCRIPTS . '/bashconfig');
-
 
 define('CLASSES',                       PHP . '/classes');
 define('GENERATOR',                     PHP . '/generator');
@@ -76,6 +77,7 @@ define ('BACKUP',                       '/backup');
 define ('RECORDINGS',                   '/recordings');
 define ('DELETES',                      '/deletes');
 define ('ASTCDR',                       '/cdr');
+define ('ASTLANG',                      'en-gb');
 
 /**
  * PJSIP files

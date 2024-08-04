@@ -22,8 +22,7 @@
  *  which are no longer used.     
  */
 
- chdir(__DIR__);
- require_once '../config.php';
+ require_once __DIR__ . "/../config.php";
 
 /**
  *  Set the prefix to create test output.  Default setting is "/last_"
@@ -41,16 +40,34 @@ $tablesdirectory=DBPATH . $prefix .'tabledumps';
 $sysTables = array (
 	"Carrier"  			=> true,			
 	"mfgmac"  			=> true,
-	"Panel"  			=> true,
-	"PanelGroup"  		=> true,
-	"PanelGroupPanel"  	=> true,
 	"vendorxref"  		=> true,
+	"Device"	  		=> true,
 	"Device_atl"  		=> true,
 	"Trunk"				=> true,
 	"IPphone_FKEY"		=> true,
-	"tt_help_core"		=> true,
-	"userpanel"			=> true,
 );
+ 	 		
+
+/**
+ *  tables to ignore
+ */
+
+ $ignores = array (
+	"undolog",
+	"tt_help_user",
+	"vendorxref",
+	"Device",
+	"device_atl",
+	"IPphone_FKEY",
+	"netphone",
+	"master_xref",
+	"master_audit",
+	"tt_help_core",
+	"Panel",
+	"PanelGroup",
+	"PanelGroupPanel",
+	"UserPanel"
+ );
 
 /**
  * Deprecated Columns to drop
@@ -63,7 +80,7 @@ $sysTables = array (
 		"globals" => array (
 			"AGENTSTART",
 			"ALERT",
-			"ASRDELIM",	
+			"ASTDLIM",	
 			"ATTEMPTRESTART",
 			"BLINDBUSY",
 			"BOUNCEALERT",			
@@ -81,6 +98,7 @@ $sysTables = array (
 			"CONFSTART",
 			"DESC",
 			"DIGITS",
+			"EXTLIM",
 			"FAX",
 			"FAXDETECT",
 			"FOPPASS",
@@ -158,6 +176,7 @@ $sysTables = array (
 				"number_range_low",
 				"number_range_high",
 				"number_min_dial",
+				"routeclassoverride",
 				"startagent",
 				"startconfroom",
 				"startextension",
@@ -183,7 +202,8 @@ $sysTables = array (
 				"desc"	
 			),
 		"Holiday" => array (
-				"desc"	
+				"desc",
+				"routeclass"	
 			),			
 		"IPphone" => array (
 				"channel",
@@ -193,9 +213,25 @@ $sysTables = array (
 				"location",
 				"newformat",
 				"openfirewall",
+				"sipiaxfriend",
 				"twin"
 				
 			),
+		"ivrmenu" => array (
+				"routeclass0",
+				"routeclass1",
+				"routeclass10",
+				"routeclass11",
+				"routeclass2",
+				"routeclass3",
+				"routeclass4",
+				"routeclass5",
+				"routeclass6",
+				"routeclass7",
+				"routeclass8",
+				"routeclass9",
+				"timeoutrouteclass"
+		),
 		"lineIO" => array (
 				"desc",
 				"carrier",
@@ -215,6 +251,8 @@ $sysTables = array (
 				"postdial",
 				"predial",
 				"remotenum",
+				"routeclassopen",
+				"routeclassclosed",
 				"routeable",
 				"sipiaxpeer",
 				"sipiaxuser",
@@ -222,7 +260,7 @@ $sysTables = array (
 				"trunk",
 				"zapcaruser",
 		),
-		"queue" => array (
+		"Queue" => array (
 			"conf",
 			"directdial",
 			"realname"	
@@ -231,13 +269,14 @@ $sysTables = array (
 			"desc"	
 		),
 		"speed" => array (
-			"desc"	
+			"desc",
+			"outcomerouteclass"	
 		)
 	);
 
 	function find_col($col,$tab,$dropstab) {
 		foreach ($dropstab as $key => $row) {
-			if ($key == $tab) {
+			if (strtolower($key) == strtolower($tab)) {
 				if (in_array($col,$row)) {
 					return true;
 				}
@@ -293,43 +332,16 @@ $sysTables = array (
  * get a column list for each table
  */		
 	foreach ($tables as $table) {
-
-//	undolog and tt_help_user are gone in V4 - ignore them if this is a V3 upgrade
-		if ( $table['name'] == 'undolog' || $table['name'] == 'tt_help_user') {
-			continue;
-		} 
-		
-//  vendorxref, device_atl and netphone are gone in V5.x - ignore them
-		if ( $table['name'] == 'vendorxref' || $table['name'] == 'device_atl' || $table['name'] == 'netphone') {
-			continue;
-		} 	 		
-
-//  ignore the master_xref table - it gets built by triggers
-	  	if ($table['name'] == 'master_xref') {
-	  		continue;
-	  	} 
-
- //  ignore the master_audit table on a reload.  It's no longer relevant to this copy
-	  	if ($table['name'] == 'master_audit') {
-	  		continue;
-	  	} 
-
-//  ignore the messages table on a reload.  It is always refreshed
-	  	if ($table['name'] == 'tt_help_core') {
-	  		continue;
-	  	} 
-
-//  No paging in this system - use multicast from a phone.
-	if ($table['name'] == 'page') {
+/**
+ *  Ignore tables in the ignore list
+ */
+	if (in_array($table['name'],$ignores)) {
+		echo "Ignoring table " . $table['name'] . "\n";
 		continue;
-	} 	
-	
-//  No front end on this system
-	if ( $table['name'] == 'Panel' || $table['name'] == 'PanelGroup' || $table['name'] == 'PanelGroupPanel' || $table['name'] == 'UserPanel') {
-		continue;
-	} 	
-
-//  get the create sql from sqlite3
+	}
+/*
+ * get the create sql from sqlite3
+ */
 		try {
 		 $sql = $dbh->query("select sql from sqlite_master WHERE name='" . $table['name'] . "' AND type='table'" )->fetchColumn();
 		}
@@ -377,16 +389,14 @@ $sysTables = array (
 // Deal with UUIDs - we use ksuid
 				if ($col['name'] == 'id') {
 					if (!preg_match("/^[a-zA-Z0-9]{27}$/",$row[$col['name']])) {
-//						echo "\nid value " .  $row[$col['name']] . " for table $tabname failed\n";
 						$row[$col['name']] = trim(`ksuid`);						
 					}
-//					echo "\nid value " .  $row[$col['name']] . " for table $tabname matched\n";
 				} 
 				$myData = $row[$col['name']];
 				$myCol = $col['name'];
 				if 	( find_col($myCol,$tabname,$drops))	{				
 					echo "dropped column " . $col['name'] . 
-					" from table" . $table['name'] . "\n";
+					" from table " . $table['name'] . "\n";
 					continue;
 				}
 				if ($myData) {

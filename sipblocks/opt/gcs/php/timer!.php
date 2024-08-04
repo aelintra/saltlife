@@ -18,8 +18,8 @@
  *  !!! Requires rework if/when we remove routecalsses (which we will)
  * 
  */
-chdir(__DIR__);
-require_once '../config.php';
+
+require_once __DIR__ . "/../config.php";
 
 require_once DBCLASS;
 require_once HELPER;

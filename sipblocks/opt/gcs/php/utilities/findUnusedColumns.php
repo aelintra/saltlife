@@ -17,8 +17,7 @@
 
 // find unused database columns - meeds to be tested
 
-chdir(__DIR__);
-require_once '../config.php';
+require_once __DIR__ . "/../config.php";
      
 $prefix='/finder_'; 
 

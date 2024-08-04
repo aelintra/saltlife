@@ -5,8 +5,7 @@
  */
 
 
-chdir(__DIR__);
-require_once '../config.php';
+ require_once __DIR__ . "/../config.php";
 
 $myconstants = get_defined_constants(true);
 

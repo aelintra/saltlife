@@ -4,8 +4,7 @@
 	REWORK for separate msgs file!!!!!!!
  */
 
- chdir(__DIR__);
- require_once '../config.php';
+require_once __DIR__ . "/../config.php";
 
 $msgFile = file("/opt/sark/db/db_v4_system.sql");
 $targetList = array();

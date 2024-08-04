@@ -20,8 +20,8 @@
 // Probs take a backup before you begin, huh?
 //
 
-chdir(__DIR__);
-require_once '../config.php';
+require_once __DIR__ . "/../config.php";
+
 require_once DBCLASS;
 require_once HELPER;
 
@@ -43,49 +43,35 @@ foreach ($queues as $queue) {
     }
     else {
         do {
-            $newkey = rand(50000,80000);            
+            $newkey = rand(5000,8000);            
         }
         while ($helper->checkXref($newkey,$queue['cluster'])); 
     }
     
     $sql = $dbh->prepare("UPDATE queue SET name=?,pkey=? WHERE pkey=?");
-    echo($sql->execute(array($queue['name'],$newkey,$queue['pkey'])));
+    echo ($sql->execute(array($queue['name'],$newkey,$queue['pkey'])));
 }
 
 /**
- * Now convert the old ringgroups to queues
- * The exception is Page groups.  These get a bogus queue strategy of "page"
- * They will ba handled seperately by the generator
+ *  Clean up greetings
+ *  pkey moves to filename
+ *  pkey becomes /\d{4}$/
+ *  
  */
+$greetings = $helper->getTable("greeting");
 
-
-$ringgroups = $helper->getTable("speed");
-$tuple = array();
-foreach ($ringgroups as $ringgroup) {
-    $tuple['id'] = $ringgroup['id'];
-    $tuple['pkey'] = $ringgroup['pkey'];
-    $tuple['cluster'] = $ringgroup['cluster'];
-    $tuple['description'] = $ringgroup['longdesc'];
-    $tuple['name'] = "RingGroup" . $ringgroup['pkey'];
-    $tuple['devicerec'] = $ringgroup['devicerec'];
-    $tuple['divert'] = $ringgroup['divert'];
-    $tuple['members'] = $ringgroup['out'];
-    $tuple['outcome'] = $ringgroup['outcome'];
-    $tuple['alertinfo'] = $ringgroup['speedalert'];
-    switch($ringgroup['grouptype']) {
-        case "Ring":
-            $tuple['strategy'] = "ringall";
-            break;
-        case "Hunt":
-            $tuple['strategy'] = "linear";
-            break;
-        case "Page":
-            $tuple['strategy'] = "page";
-            break;            
+foreach ($greetings as $greeting) {
+    if (is_numeric($greeting['pkey'])) {
+        continue;
     }
-    
-    echo ($helper->createTuple("queue",$tuple,true,true) . "\n");
-    unset ($tuple);
+    $filename = $greeting['pkey'];
+    preg_match('/.*(\d{4})$/',$greeting['pkey'],$matches);
+    if (!is_numeric($matches[1])) {
+        echo "Greeting pkey last 4 not numeric - ignoring for " .  $greeting['pkey'] . "\n";
+        continue;
+    } 
+    $sql = $dbh->prepare("UPDATE greeting SET pkey=?,filename=? WHERE id=?");
+    echo ($sql->execute(array($matches[1],$filename,$greeting['id'])));
 }
 
 //
@@ -108,6 +94,42 @@ foreach ($ivrs as $ivr) {
     $sql = $dbh->prepare("UPDATE ivrmenu SET name=?,pkey=? WHERE pkey=?");
     echo($sql->execute(array($ivr['name'],$newkey,$ivr['pkey'])));
 }
+
+/**
+ * Now convert the old ringgroups to queues
+ * The exception is Page groups.  These get a bogus queue strategy of "page"
+ * They will ba handled seperately by the generator
+ */
+
+
+ $ringgroups = $helper->getTable("speed");
+ $tuple = array();
+ foreach ($ringgroups as $ringgroup) {
+     $tuple['id'] = $ringgroup['id'];
+     $tuple['pkey'] = $ringgroup['pkey'];
+     $tuple['cluster'] = $ringgroup['cluster'];
+     $tuple['description'] = $ringgroup['longdesc'];
+     $tuple['name'] = "RingGroup" . $ringgroup['pkey'];
+     $tuple['devicerec'] = $ringgroup['devicerec'];
+     $tuple['divert'] = $ringgroup['divert'];
+     $tuple['members'] = $ringgroup['out'];
+     $tuple['outcome'] = $ringgroup['outcome'];
+     $tuple['alertinfo'] = $ringgroup['speedalert'];
+     switch($ringgroup['grouptype']) {
+         case "Ring":
+             $tuple['strategy'] = "ringall";
+             break;
+         case "Hunt":
+             $tuple['strategy'] = "linear";
+             break;
+         case "Page":
+             $tuple['strategy'] = "page";
+             break;            
+     }
+     
+     echo ($helper->createTuple("queue",$tuple,true,true) . "\n");
+     unset ($tuple);
+ }
 
 /*** close the database connection ***/
 $dbh = null; 

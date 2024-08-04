@@ -8,7 +8,9 @@ pkey INTEGER NOT NULL,
 cluster TEXT DEFAULT 'default',
 conf TEXT,
 extlen INTEGER,
-name TEXT DEFAULT '*NEW AGENT*',
+-- name is deprecated and will be dropped in a near release use cname instead
+name TEXT DEFAULT '*NEW AGENT*', 
+cname TEXT DEFAULT '*NEW AGENT*',
 num TEXT,
 passwd TEXT,				
 queue1 TEXT DEFAULT 'None',
@@ -31,7 +33,9 @@ cluster TEXT DEFAULT 'default',
 description TEXT,
 directdial INTEGER,
 extcode TEXT,
+-- name is deprecated and will be dropped in a near release use cname instead
 name TEXT,
+cname TEXT,                            -- common name
 span TEXT DEFAULT 'Neither',
 striptags TEXT,
 z_created datetime,
@@ -104,6 +108,7 @@ monitor_out TEXT DEFAULT '/var/spool/asterisk/monout/', -- monitorout folder
 monitor_stage TEXT DEFAULT '/var/spool/asterisk/monstage/', -- monstage folder
 monitor_type TEXT,					   -- Monitor or Mixmonitor
 name TEXT,
+cname TEXT,
 number_range_regex TEXT,
 oclo TEXT,
 operator INTEGER DEFAULT 100,
@@ -124,7 +129,6 @@ recmaxage TEXT DEFAULT '60',		   -- Max age in days of call recordings for this 
 recmaxsize TEXT DEFAULT '0',		   -- Recording storage maximum for this tenant
 recused TEXT DEFAULT '0',			   -- Recording storage used by this tenant (updated according to cron freq)						
 ringdelay INTEGER DEFAULT 20,       -- default ring timeout (seconds)
-routeclassoverride TEXT,			   -- Holiday scheduler route class override
 routeoverride TEXT,					   -- Holiday scheduler route override
 spy_pass TEXT DEFAULT '3333',       -- spy password
 sysop INTEGER,                      -- real operator extension
@@ -178,7 +182,6 @@ pkey TEXT,								      -- not really used but satisfies tuple builder
 cluster TEXT DEFAULT 'default',			-- tenant
 description TEXT,								-- Description						
 route TEXT,								      -- Holiday scheduler route override
-routeclass TEXT,						      -- Holiday scheduler route class override
 stime INTEGER,							      -- Epoch start
 etime INTEGER,							      -- Epoch end
 z_created datetime,
@@ -195,10 +198,12 @@ active TEXT DEFAULT 'YES',			      -- Active/inactive flag
 basemacaddr TEXT,                      -- not used             
 callerid TEXT,                         -- CLID
 callbackto INTEGER DEFAULT 100,        -- who we callback (ext/cell)
+cname TEXT,                            -- common name
 callmax TEXT DEFAULT 3,				      -- PJSIP does not support call-limit so we have to do it using GROUP
 cellphone TEXT,						      -- cellphone twin
 celltwin TEXT,							      -- cell twin on/off
 cluster TEXT DEFAULT 'default',        -- Tenant
+-- desc is deprecated, use cname instead
 desc TEXT,
 description TEXT,                      -- asterisk username
 device TEXT,                           -- device vendor
@@ -215,7 +220,6 @@ pjsipuser TEXT,						      -- Asterisk PJSIP string
 provision TEXT,                        -- provisioning string 
 provisionwith TEXT DEFAULT 'IP',	      -- how to provision my id - IP address or FQDN   
 sndcreds TEXT DEFAULT 'Always',        -- send creds with provisioning
-sipiaxfriend TEXT,                     -- asterisk SIP string
 stealtime INTEGER,                     -- epoch time this extension was stolen by HD
 stolen TEXT,                           -- HD thief 
 technology TEXT,                       -- SIP/IAX2/DiD/CLiD/Class
@@ -250,21 +254,6 @@ z_updater TEXT DEFAULT 'system',
 PRIMARY KEY (IPphone_pkey, COS_pkey)
 );
 
-/* phone function (blf) keys */
-CREATE TABLE IF NOT EXISTS IPphone_FKEY (
-id TEXT,
-pkey TEXT,                              -- owner extension
-seq INTEGER,                            -- blf/dss number
-device TEXT,                            -- device type
-label TEXT,                             -- blf label
-type TEXT,                              -- blf type
-value TEXT,                             -- blf value
-z_created datetime,
-z_updated datetime,
-z_updater TEXT DEFAULT 'system',
-PRIMARY KEY (pkey, seq)
-);
-
 /* IVR menus */
 CREATE TABLE IF NOT EXISTS ivrmenu (
 id TEXT,	
@@ -285,7 +274,9 @@ cluster TEXT,
 description TEXT DEFAULT 'None',
 greetnum TEXT DEFAULT 'None',			-- greeting number to play
 listenforext TEXT DEFAULT 'NO',
+-- name is deprecated and will be dropped in a near release use cname instead
 name TEXT,
+cname TEXT,                            -- common name
 option0 TEXT DEFAULT 'None',						      -- routed name for each keypress
 option1 TEXT DEFAULT 'None',
 option10 TEXT DEFAULT 'None',
@@ -298,18 +289,6 @@ option6 TEXT DEFAULT 'None',
 option7 TEXT DEFAULT 'None',
 option8 TEXT DEFAULT 'None',
 option9 TEXT DEFAULT 'None',
-routeclass0 TEXT,					      -- routeclass for each keypress
-routeclass1 TEXT,
-routeclass10 TEXT,
-routeclass11 TEXT,
-routeclass2 TEXT,
-routeclass3 TEXT,
-routeclass4 TEXT,
-routeclass5 TEXT,
-routeclass6 TEXT,
-routeclass7 TEXT,
-routeclass8 TEXT,
-routeclass9 TEXT,
 tag0 TEXT,							      -- alphatag for each keypress
 tag1 TEXT,
 tag10 TEXT,
@@ -323,7 +302,6 @@ tag7 TEXT,
 tag8 TEXT,
 tag9 TEXT,
 timeout TEXT,			               -- timeout name 					
-timeoutrouteclass TEXT,	            -- timeout routeclass
 z_created datetime,
 z_updated datetime,
 z_updater TEXT DEFAULT 'system',
@@ -356,8 +334,6 @@ peername TEXT,				-- strong Asterisk username
 pjsipreg TEXT DEFAULT NULL,	-- Asterisk pjsip registration (SND/RCV/NULL)									
 privileged TEXT,			-- privileged ingress 
 register TEXT,				-- registration string
-routeclassopen TEXT,		-- routeclass
-routeclassclosed TEXT,		-- routeclass
 swoclip TEXT DEFAULT 'YES',	-- Switch On CLIP
 tag TEXT,					-- Alpha tag
 technology TEXT,           -- SIP/IAX2/DiD/CLiD/Class
@@ -365,6 +341,15 @@ transform TEXT,				-- Transformation mask
 transport TEXT DEFAULT 'udp',
 trunkname TEXT,				-- freeform trunkname
 username TEXT,				-- far end username
+z_created datetime,
+z_updated datetime,
+z_updater TEXT DEFAULT 'system'
+);
+
+/* page groups */
+CREATE TABLE IF NOT EXISTS page (
+pkey TEXT PRIMARY KEY,
+pagegroup TEXT,
 z_created datetime,
 z_updated datetime,
 z_updater TEXT DEFAULT 'system'
@@ -396,7 +381,9 @@ devicerec TEXT,
 divert INTEGER,
 greetnum TEXT DEFAULT 'None',
 greeting TEXT DEFAULT 'None',       --N.B. will replace greetnum
+-- name is deprecated and will be dropped in a near release use cname instead
 name TEXT,                      --Human readable name
+cname TEXT,                            -- common name
 members TEXT,                       --N.B. will replace OUT in speed
 options TEXT DEFAULT 'CiIknrtT',
 musicclass TEXT,
@@ -451,7 +438,6 @@ longdesc TEXT,
 obeydnd TEXT,
 out TEXT,
 outcome TEXT,
-outcomerouteclass TEXT,
 pagegroup TEXT,
 ringdelay INTEGER DEFAULT 15,
 speedalert TEXT,
@@ -522,7 +508,6 @@ EMAILALERT TEXT,                    -- email alert address **MOVED**
 EMERGENCY TEXT DEFAULT '999 112 911',  -- **MOVED**
 EXTBLKLST TEXT,                     -- delete candidate **MOVED**
 EXTLEN INTEGER DEFAULT 5,				-- extension length - deprecated
-EXTLIM TEXT,                        -- 
 FQDN TEXT,							-- FQDN - NEEDS TO MOVE
 FQDNINSPECT TEXT DEFAULT 'NO',		-- Require FQDN in SIP Ops Shorewall 4.6+ 
 FQDNPROV TEXT,						-- use FQDN in remote provisioning YES/NO
@@ -573,43 +558,27 @@ z_updater TEXT DEFAULT 'system'
 );
 
 
-/* manufacturer MAC roots (left three bytes) */
+/* manufacturer MAC roots (left three bytes) */ 
+/* DEPRECATED - will be removed in favour of IEEE tables */
 CREATE TABLE IF NOT EXISTS mfgmac (
 pkey TEXT PRIMARY KEY,
+-- name is deprecated and will be dropped in a near release use cname instead
 name TEXT,                 --Manufacturer name
+cname TEXT,                            -- common name
 notify TEXT,
 z_created datetime,
 z_updated datetime,
 z_updater TEXT DEFAULT 'system'
 );
 
-/* phone types */
-CREATE TABLE IF NOT EXISTS Device (
-pkey TEXT PRIMARY KEY,
-blfkeyname TEXT,
-blfkeys INTEGER DEFAULT 0,
-description TEXT,
-device TEXT,               --drop?
-fkeys INTEGER,
-legacy TEXT,               --drop?
-owner TEXT DEFAULT 'system',
-pkeys INTEGER,
-provision TEXT,
-sipiaxfriend TEXT,
-technology TEXT,                 --SIP/Descriptor/BLF Template
-z_created datetime,
-z_updated datetime,
-z_updater TEXT DEFAULT 'system'
-);
 
 /* master xref */
 
 CREATE TABLE IF NOT EXISTS master_xref (
-id TEXT,
+id TEXT PRIMARY KEY,
 pkey TEXT,
 cluster TEXT DEFAULT 'default',
-relation TEXT,
-PRIMARY KEY (id)
+relation TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_xref_cluster ON master_xref (cluster);
@@ -628,7 +597,9 @@ CREATE TABLE IF NOT EXISTS tt_help_core (
 pkey TEXT PRIMARY KEY,
 displayname TEXT,
 htext TEXT,
+-- name is deprecated and will be dropped in a near release use cname instead
 name TEXT,
+cname TEXT,                            -- common name
 z_created datetime,
 z_updated datetime,
 z_updater TEXT DEFAULT 'system'
@@ -697,21 +668,6 @@ BEGIN
    INSERT INTO master_audit(act,owner,relation,tstamp) VALUES ('DELETE', old.pkey, 'Cluster', datetime('now'));
 END;
 
-CREATE TRIGGER IF NOT EXISTS Device_insert AFTER INSERT ON Device
-BEGIN
-   UPDATE Device set z_created=datetime('now'), z_updated=datetime('now') where pkey=new.pkey;
-   INSERT INTO master_audit(act,owner,relation,tstamp) VALUES ('INSERT', new.pkey, 'Device', datetime('now'));   
-END;
-CREATE TRIGGER IF NOT EXISTS Device_update AFTER UPDATE ON Device
-BEGIN
-   UPDATE Device set z_updated=datetime('now') where pkey=new.pkey;
-   INSERT INTO master_audit(act,owner,relation,tstamp) VALUES ('UPDATE', new.pkey, 'Device', datetime('now'));
-END;
-CREATE TRIGGER IF NOT EXISTS Device_delete AFTER DELETE ON Device
-BEGIN
-   INSERT INTO master_audit(act,owner,relation,tstamp) VALUES ('DELETE', old.pkey, 'Device', datetime('now'));
-END;
-
 CREATE TRIGGER IF NOT EXISTS Greeting_insert AFTER INSERT ON Greeting
 BEGIN
    UPDATE Greeting set z_created=datetime('now'), z_updated=datetime('now') where pkey=new.pkey;
@@ -755,21 +711,6 @@ END;
 CREATE TRIGGER IF NOT EXISTS IPphone_delete AFTER DELETE ON IPphone
 BEGIN
    INSERT INTO master_audit(act,owner,relation,tstamp) VALUES ('DELETE', old.pkey, 'IPphone', datetime('now'));
-END;
-
-CREATE TRIGGER IF NOT EXISTS IPphone_FKEY_insert AFTER INSERT ON IPphone_FKEY
-BEGIN
-   UPDATE IPphone_FKEY set z_created=datetime('now'), z_updated=datetime('now') where pkey=new.pkey;
-   INSERT INTO master_audit(act,owner,relation,tstamp) VALUES ('INSERT', new.pkey, 'IPphone_FKEY', datetime('now'));   
-END;
-CREATE TRIGGER IF NOT EXISTS IPphone_FKEY_update AFTER UPDATE ON IPphone_FKEY
-BEGIN
-   UPDATE IPphone_FKEY set z_updated=datetime('now') where pkey=new.pkey;
-   INSERT INTO master_audit(act,owner,relation,tstamp) VALUES ('UPDATE', new.pkey, 'IPphone_FKEY', datetime('now'));
-END;
-CREATE TRIGGER IF NOT EXISTS IPphone_FKEY_delete AFTER DELETE ON IPphone_FKEY
-BEGIN
-   INSERT INTO master_audit(act,owner,relation,tstamp) VALUES ('DELETE', old.pkey, 'IPphone_FKEY', datetime('now'));
 END;
 
 CREATE TRIGGER IF NOT EXISTS Queue_insert AFTER INSERT ON Queue
@@ -976,19 +917,6 @@ END;
 CREATE TRIGGER IF NOT EXISTS Cluster_update_key AFTER UPDATE OF pkey ON Cluster
 BEGIN
    UPDATE master_xref set pkey=new.pkey where pkey=old.pkey AND relation='Cluster';
-END;
-
-CREATE TRIGGER IF NOT EXISTS Device_xref_insert AFTER INSERT ON Device
-BEGIN
-	INSERT INTO master_xref(pkey, relation) VALUES (new.pkey, 'Device');
-END;
-CREATE TRIGGER IF NOT EXISTS Device_xref_delete AFTER DELETE ON Device
-BEGIN
-   DELETE from master_xref WHERE pkey=old.pkey AND relation='Device'; 
-END;
-CREATE TRIGGER IF NOT EXISTS Device_update_key AFTER UPDATE OF pkey ON Device
-BEGIN
-   UPDATE master_xref set pkey=new.pkey where pkey=old.pkey AND relation='Device';
 END;
 
 CREATE TRIGGER IF NOT EXISTS Greeting_xref_insert AFTER INSERT ON Greeting

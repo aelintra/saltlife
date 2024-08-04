@@ -20,8 +20,7 @@
 // Probs take a backup before you begin, huh?
 //
 
-chdir(__DIR__);
-require_once '../config.php';
+require_once __DIR__ . "/../config.php";
 
 try {
     /*** connect to SQLite database ***/

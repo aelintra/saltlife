@@ -1,5 +1,6 @@
 <?php
-require_once "/opt/gcs/php/config.php";
+//require_once "/opt/gcs/php/config.php";
+require_once __DIR__ . "/../config.php";
 
 include "commonFuncs.php";
 include NETHELPER;

@@ -17,8 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-chdir(__DIR__);
-require_once '../config.php';
+require_once __DIR__ . "/../config.php";
 
 require_once ASTMANAGER;
 require_once HELPER;

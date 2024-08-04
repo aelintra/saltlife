@@ -2,6 +2,10 @@
 #
 #	script to merge/move sound recordings 
 #
+#	This is no longer needed since we do everything in mixmonitor now.
+#   However, we need to make a decision about OTR and OTRR and whether we
+#   continue to support them in these days of cheap storage space
+
 
 # uncomment next line for syslog debug output
 #	DEBUG=1
@@ -30,7 +34,7 @@
 		[ $DEBUG ] && logger MOVING MIXMON $RIGHT
 		if [ -e /opt/sark/otrr/$RIGHT ]; then
 			/bin/rm -rf /opt/sark/otrr/$RIGHT
-			/usr/bin/test ! -r  /opt/sark/.recone && exit 0
+//			/usr/bin/test ! -r  /opt/sark/.recone && exit 0
 			/bin/mv $RIGHT $MONITOROUT
 			exit 0
 		fi

@@ -15,9 +15,7 @@
 // +-----------------------------------------------------------------------+
 //
 
-
-chdir(__DIR__);
-require_once '../config.php';
+require_once __DIR__ . "/../config.php";
 
 include_once (DBCLASS);
 include_once (HELPER);

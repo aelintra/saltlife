@@ -34,8 +34,9 @@ if [ -e $SYSMSGDB ]; then
 	echo Loading system messages
 	sqlite3 $SYSDB < $SYSMSGDB
 fi
-echo Loading system device data
-sqlite3 $SYSDB < $SYSDEVICE
+# No device data in this version
+#echo Loading system device data
+#sqlite3 $SYSDB < $SYSDEVICE
 
 #Reload any saved customer data
 if [ "$NEWINSTALL" = false ]; then
@@ -44,10 +45,10 @@ if [ "$NEWINSTALL" = false ]; then
 		sqlite3 $SYSDB < $CUSTDATA
 	fi
 	
-	if [ -e $CUSTDEVICE ]; then
-		echo Loading customer device data from $CUSTDEVICE
-		sqlite3 $SYSDB < $CUSTDEVICE
-	fi
+#	if [ -e $CUSTDEVICE ]; then
+#		echo Loading customer device data from $CUSTDEVICE
+#		sqlite3 $SYSDB < $CUSTDEVICE
+#	fi
 fi
 
 #run the once files
