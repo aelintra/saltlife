@@ -1,0 +1,10 @@
+Source: sipswarm-core
+Section: network
+Priority: extra
+Maintainer: root <root@wheezy224.aelintra.com>
+
+Package: sipswarm-core
+Architecture: any
+Depends: ${misc:Depends}, asterisk
+Description: sipswarm-core
+ sipswarm-core switching Engine.

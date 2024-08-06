@@ -5,7 +5,7 @@
 
 /usr/bin/logger Regenerating Asterisk
 
-php $APACHEGEN
+php $ASTGEN
 
 # copy the DB
 /bin/cp $SYSDB $COPY_DB

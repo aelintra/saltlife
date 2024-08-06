@@ -105,8 +105,8 @@ masteroclo TEXT,
 max_in INTEGER DEFAULT 30,          -- max inbound calls allowed to be up
 mixmonitor TEXT,                    -- force mixmonitor on all recordings
 monitor_out TEXT DEFAULT '/var/spool/asterisk/monout/', -- monitorout folder
-monitor_stage TEXT DEFAULT '/var/spool/asterisk/monstage/', -- monstage folder
-monitor_type TEXT,					   -- Monitor or Mixmonitor
+monitor_stage TEXT DEFAULT '/var/spool/asterisk/monstage/', -- monstage folder - delete
+monitor_type TEXT,					   -- Monitor or Mixmonitor - delete
 name TEXT,
 cname TEXT,
 number_range_regex TEXT,

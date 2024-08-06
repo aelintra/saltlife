@@ -126,7 +126,7 @@ define('CUSTDATA',                      DBPATH . '/last_data.sql');			//customer
 define('LASTDEVICE',                    DBPATH . '/last_device.sql');			//device table previous iteration      
 define('CUSTDEVICE',                    DBPATH . '/last_custdevice.sql');	    //customer devices previous iteration
 define('DUMPER',                        GENERATOR . '/dumper.php'); 	//loc. of the dumper
-define('APACHEGEN',                     GENERATOR . '/runApacheGen.php');
+define('ASTGEN',                     GENERATOR . '/runAstGen.php');
 define('SIPFIX',                        UTILITIES . '/sipiaxfix.php'); 	//loc. of the V6 sipiaxfixup routine
 define('GENAST',                        SCRIPTS . '/genAst.sh');		//loc. of the generator
 define('HTTPOWNER',                     'www-data:www-data');		//apache user/group (Deb/Ubu)q

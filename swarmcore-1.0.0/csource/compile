@@ -1,0 +1,1 @@
+gcc sarkhpe.c cagi.c sqlite3.c -o sarkhpe -pthread -ldl
