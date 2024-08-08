@@ -677,7 +677,6 @@ BANNEREND;
 				if (!empty($mailbox[$row['cluster']][$row['pkey']]['password'])) {
 					$pwd = $mailbox[$row['cluster']][$row['pkey']]['password'];
 				} else {
-//					$pwd = $this->displayKey($row['pkey']);
 					$pwd = ($row['pkey']);
 				}
 				$this->OUT .= $row['pkey'] . ' => ' . $pwd . ',' . $row['description'] . ',' .

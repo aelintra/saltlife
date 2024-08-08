@@ -448,7 +448,7 @@ z_updater TEXT DEFAULT 'system',
 PRIMARY KEY (pkey,cluster)
 );
 
-/* Laravel admins and users */
+/* old SARK admins and users  - Larvel uses 'User' */
 CREATE TABLE IF NOT EXISTS User (
 id TEXT PRIMARY KEY,
 pkey TEXT NOT NULL,			-- UID
