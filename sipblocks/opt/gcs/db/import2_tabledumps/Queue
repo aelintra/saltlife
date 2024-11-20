@@ -1,0 +1,3 @@
+BEGIN TRANSACTION;
+INSERT OR IGNORE INTO Queue(id,pkey,active,cluster,devicerec,greetnum,greeting,options,retry,outcome,strategy,timeout) values ('2kyMkaDqZhmwhZ0Lv8EvdgBZmrK','affcotQ','YES','affcot','None','None','None','t','1','None','ringall','30');
+COMMIT;

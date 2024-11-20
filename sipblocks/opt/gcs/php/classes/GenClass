@@ -794,7 +794,7 @@ BANNEREND;
         //
 
         $displayglobals = array(
-            "ABSTIMEOUT", "ALLOWHASHXFER", "EMERGENCY", "LANGUAGE", "OPERATOR", "SYSOP", "SYSPASS", "VOIPMAX", "MAXIN"
+            "ABSTIMEOUT", "EMERGENCY", "LANGUAGE", "OPERATOR", "SYSOP", "SYSPASS", "VOIPMAX", "MAXIN"
         );
 
         $this->globals['LANGUAGE'] = ASTLANG;

@@ -1,6 +1,25 @@
-UPDATE queue SET cluster = (SELECT id FROM cluster WHERE cluster.pkey = queue.cluster);
-UPDATE route SET cluster = (SELECT id FROM cluster WHERE cluster.pkey = route.cluster);
-UPDATE lineio SET cluster = (SELECT id FROM cluster WHERE cluster.pkey = lineio.cluster);
-UPDATE ivrmenu SET cluster = (SELECT id FROM cluster WHERE cluster.pkey = ivrmenu.cluster);
-UPDATE ipphone SET cluster = (SELECT id FROM cluster WHERE cluster.pkey = ipphone.cluster);
-UPDATE greeting SET cluster = (SELECT id FROM cluster WHERE cluster.pkey = greeting.cluster);
+
+UPDATE agent SET cname = name;
+UPDATE agent SET cluster = (SELECT id FROM cluster WHERE pkey = agent.cluster);
+
+UPDATE appl SET cname = name;
+UPDATE appl SET cluster = (SELECT id FROM cluster WHERE pkey = appl.cluster);
+
+UPDATE cos SET cname = pkey;
+UPDATE cos SET cluster = (SELECT id FROM cluster WHERE pkey = cos.cluster);
+
+UPDATE greeting SET cname = pkey; 
+UPDATE greeting SET cluster = (SELECT id FROM cluster WHERE pkey = greeting.cluster);
+
+UPDATE ipphone SET cluster = (SELECT id FROM cluster WHERE pkey = cluster);
+
+UPDATE ivrmenu SET cname = name;
+UPDATE ivrmenu SET cluster = (SELECT id FROM cluster WHERE pkey = ivrmenu.cluster);
+
+UPDATE lineio SET cluster = (SELECT id FROM cluster WHERE pkey = lineio.cluster);
+
+UPDATE meetme SET cluster = (SELECT id FROM cluster WHERE pkey = meetme.cluster);
+
+UPDATE queue SET cluster = (SELECT id FROM cluster WHERE pkey = queue.cluster );
+
+UPDATE route SET cluster = (SELECT id FROM cluster WHERE pkey = route.cluster);

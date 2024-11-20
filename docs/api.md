@@ -674,30 +674,73 @@ Return a list or instance of Tenant
 Create a new tenant
 Body
 ```
-'pkey' => 'required'
+'pkey' => 'string|required'
 'description' => 'string|required'
 ```
 ####PUT /tenants/{tenant}
 update a tenant
 Body
 ```
-'abstimeout' => 'integer',
-'clusterclid' => 'integer|nullable',
-'callgroup' => 'integer|nullable',
-'chanmax' => 'integer',
-'description' => 'string',
-'include' => 'string|nullable',
-'localarea' => 'integer,nullable',
-'localdplan' => [
-'regex:/^\s*(_?(XZN[0-9])\.?)\s*$',
-    'nullable'
-],
-'masteroclo' => 'in:AUTO,CLOSED',
-'operator' => 'integer',
-'pickupgroup' => 'integer|nullable'
+    		'abstimeout' => 'integer',
+			'allow_hash_xfer' => 'in:enabled,disabled',
+			'callrecord1' => 'in:None,In,Out,Both',
+			'cfwdextern_rule' => 'In:YES,NO',
+			'cfwd_progress' => 'in:enabled,disabled',
+			'cfwd_answer' => 'in:enabled,disabled',
+			'clusterclid' => 'integer|nullable',
+			'chanmax' => 'integer',
+			'countrycode' => 'integer',
+			'dynamicfeatures' => 'string',
+			'description' => 'string',
+			'emergency' => 'integer',
+			'int_ring_delay' => 'integer',
+			'ivr_key_wait' => 'integer',
+			'ivr_digit_wait' => 'integer',
+			'language' => 'string',
+			'ldapanonbind' => 'YES',
+			'ldapbase' => 'string',
+			'ldaphost' => 'string',
+			'ldapou' => 'string',
+			'ldapuser' => 'string',
+			'ldappass' => 'sarkstring',
+			'ldaptls' => 'in:on,off',
+			'localarea' => 'numeric|nullable',
+			'localdplan' => [
+					'regex:/^_X+$/',
+					'nullable'
+			],
+			'lterm' => 'boolean',
+			'leasedhdtime' => 'integer|nullable',
+			'masteroclo' => 'in:AUTO,CLOSED',
+			'max_in' => 'integer',
+			'monitor_out' => 'string',
+			'operator' => 'integer',
+			'pickupgroup' => 'string',
+			'play_beep' => 'boolean',
+			'play_busy' => 'boolean',
+			'play_congested' => 'boolean',
+			'play_transfer' => 'boolean',
+			'rec_age' => 'integer',
+			'rec_final_dest' => 'string',
+			'rec_file_dlim' => 'string',
+			'rec_grace' => 'integer',
+			'rec_limit' => 'integer',
+			'rec_mount' => 'integer',
+			'recmaxage' => 'integer',
+			'recmaxsize' => 'integer',
+			'recused' => 'integer',
+			'ringdelay' => 'integer',
+			'routeoverride' => 'integer',
+			'spy_pass' => 'integer',
+			'sysop' => 'integer',
+			'syspass' => 'integer',
+			'usemohcustom' => 'integer|nullable',
+			'vmail_age' => 'integer',
+			'voice_instr' => 'boolean',
+			'voip_max' => 'integer'
 ```
 ####DELETE /tenants/{tenant}
-A tenant can only be deleted if it has no dependencies
+Deleting a tenant will delete ALL of its dependencies.
 
 --------------------------------------------------------------------
 

@@ -2,54 +2,83 @@
 
 . /opt/gcs/scripts/bashconfig
 
-NEWINSTALL=true
+echo "createdb is $CREATEDB"
 
-#save and dump existing db if it exists then delete it
-if [ -e $SYSDB ]  ; then
-	echo "Saving customer database as $LASTDB"
-	cp -a $SYSDB $LASTDB
-	php $DUMPER 
-	if [ $? -ne 0 ]; then
-		echo DUMP ERROR
-		exit 4
-	fi
-	rm -rf $SYSDB
-	NEWINSTALL=false
+Targetdb=$SYSDB
+Fullpathtargetdb=$SYSDB
+Fullpathlastdb=$LASTDB
+Prefix="last_";
+
+
+while getopts ":hs:d:" option; do
+	case $option in
+		h) # display Help
+			echo "Syntax: reloader.sh [-s -d -h]"
+			echo "s     source file prefixes."
+			echo "d     destination db."
+			echo "h     print this help."
+			exit;;
+
+		s) # source files prefix
+			Prefix=$OPTARG;;
+			
+		d) # destination db
+			Targetdb=$OPTARG;;
+						
+		\?) # Invalid option
+			echo "Error: Invalid option"
+			exit;;
+	esac
+done
+
+if [ "$Targetdb" = "$SYSDB" ]; then
+	echo "No -d parameter given, using $SYSDB as target"
 else
-	echo No customer database - not saving
+	Fullpathtargetdb="$DBPATH/$Targetdb"
+	Fullpathlastdb="$DBPATH/last_$Targetdb"	
+
+	if [ -e "$Fullpathtargetdb" ]; then
+		echo "Saving existing database as $Fullpathlastdb"
+		cp -a $Fullpathtargetdb $Fullpathlastdb 
+	else
+		echo "Destination database $Fullpathtargetdb does not exist, creating it" 
+		touch $Fullpathtargetdb
+	fi
 fi
 
-sqlite3 $SYSDB 'PRAGMA synchronous=0;'
-sqlite3 $SYSDB 'PRAGMA journal_mode=MEMORY;' >/dev/null 2>&1
+echo "Saving existing database $Fullpathtargetdb as $Fullpathlastdb"
+cp -a $Fullpathtargetdb $Fullpathlastdb 
+
+
+echo "Deleting existing db $Fullpathtargetdb"
+rm $Fullpathtargetdb
+
+Customerdata=$DBPATH/$Prefix
+Customerdata="${Customerdata}data.sql"
+echo "Building for target $Fullpathtargetdb with data $Customerdata"
+
+NEWINSTALL=true
+
+sqlite3 $Fullpathtargetdb 'PRAGMA synchronous=0;'
+sqlite3 $Fullpathtargetdb 'PRAGMA journal_mode=MEMORY;' >/dev/null 2>&1
 
 #create the db from the system files
-echo Creating new database from $CREATDB
-sqlite3 $SYSDB < $CREATEDB
+echo "Creating new database $Fullpathtargetdb from $CREATEDB"
+sqlite3 $Fullpathtargetdb < $CREATEDB
 
-#Load the system data
-echo Loading initial system data from $SYSTEMDB
-sqlite3 $SYSDB < $SYSTEMDB
 #Load the system messages 
 if [ -e $SYSMSGDB ]; then
 	echo Loading system messages
-	sqlite3 $SYSDB < $SYSMSGDB
+	sqlite3 $Fullpathtargetdb < $SYSMSGDB
 fi
-# No device data in this version
-#echo Loading system device data
-#sqlite3 $SYSDB < $SYSDEVICE
 
 #Reload any saved customer data
-if [ "$NEWINSTALL" = false ]; then
-	if [ -e $CUSTDATA ]; then
-		echo Loading customer data from $CUSTDATA
-		sqlite3 $SYSDB < $CUSTDATA
-	fi
-	
-#	if [ -e $CUSTDEVICE ]; then
-#		echo Loading customer device data from $CUSTDEVICE
-#		sqlite3 $SYSDB < $CUSTDEVICE
-#	fi
+
+if [ -e $Customerdata ]; then
+	echo Loading customer data from $Customerdata
+	sqlite3 $Fullpathtargetdb < $Customerdata
 fi
+
 
 #run the once files
 echo Running ONCE files..
@@ -61,37 +90,34 @@ fi
 if [ "$(ls -A $SYSONCE)" ]; then
 	for file in $(ls $SYSONCE/) ; do
 		if [ ! -e $SYSONCEDONE/$file ]; then
-			echo "Applying oncefile $file to the SYSDB"
-			sqlite3 $SYSDB < $SYSONCE/$file
+			echo "Applying oncefile $file to $Fullpathtargetdb"
+			sqlite3 $Fullpathtargetdb < $SYSONCE/$file
 			cp -a $SYSONCE/$file $SYSONCEDONE/$file
 		else 
 			echo "Skipping oncefile $file because it is already applied"
 		fi	
 	done
 else 
-	echo "No ONCE files to apply (Directory is empty)"
+	echo "No ONCE files to apply - Directory is empty"
 fi
 
 #run the always files
 echo Running ALWAYS files..
 if [ "$(ls -A $SYSALWAYS)" ]; then
 	for file in $(ls $SYSALWAYS/) ; do
-		echo "Applying alwaysfile $file to the SYSDB"
-		sqlite3 $SYSDB < $SYSALWAYS/$file
+		echo "Applying alwaysfile $file to $Fullpathtargetdb"
+		sqlite3 $Fullpathtargetdb < $SYSALWAYS/$file
 	done
 else 
-	echo "No ALWAYS files to apply (Directory is empty)"
+	echo "No ALWAYS files to apply - Directory is empty"
 fi
 
-sqlite3 $SYSDB 'PRAGMA synchronous=1;'
-sqlite3 $SYSDB 'PRAGMA journal_mode=DELETE;' >/dev/null 2>&1
+sqlite3 $Fullpathtargetdb 'PRAGMA synchronous=1;'
+sqlite3 $Fullpathtargetdb 'PRAGMA journal_mode=DELETE;' >/dev/null 2>&1
 
 
 # save a copy of the original installed database (for factory reset)
-[ "$NEWINSTALL" = true ] && cp $SYSDB $CLEANDB
-
-
-
+#[ "$NEWINSTALL" = true ] && cp $SYSDB $CLEANDB
 
 
 #patch sipiaxfriend for nat and transport here using sipiaxfix
@@ -106,7 +132,7 @@ sh $GENAST
 #set db ownership
 chown $HTTPOWNER $DBPATH/*
 
-#set db perms 
+#set db perms q
 chmod 664 $SYSDB
 
 # clean the firewall up

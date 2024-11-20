@@ -1,6 +1,6 @@
 <?php
 // +-----------------------------------------------------------------------+
-// |  Copyright (c) KoKoKraft 2024                                |
+// |  Copyright (c) KoKoKraft 2024
 // +-----------------------------------------------------------------------+
 // | This file is free software; you can redistribute it and/or modify     |
 // | it under the terms of the GNU General Public License as published by  |
@@ -11,25 +11,58 @@
 // | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          |
 // | GNU General Public License for more details.                          |
 // +-----------------------------------------------------------------------+
-// | Author: KoKoKraft                                                           |
+// | Author: KoKoKraft                                                      
 // +-----------------------------------------------------------------------+
 // 
 
 /**
  *  dumper
- *  dumps the current sqlitedb into a set of prefixed files.  
+ *  dumps the target sqlitedb into a set of prefixed files.  
  *  It will obey drops set in the $drops array.   This allows the removal of columns
  *  which are no longer used.     
  */
 
  require_once __DIR__ . "/../config.php";
 
-/**
+ /**
  *  Set the prefix to create test output.  Default setting is "/last_"
  */
 $prefix='/last_';
+$db = SYSDB;
 
-$sqlitedb = "sqlite:" . SYSDB;
+$shortopts = "d::";
+
+$longopts = array(
+	"inputdb::",
+	"prefix::",
+);
+
+$options = getopt($shortopts, $longopts);
+
+
+	if ($options["inputdb"]) {
+		if (!file_exists($options["inputdb"])) {
+			echo "DB import file not found\n";
+			exit;
+		}
+		$db = $options["inputdb"];
+	}
+
+
+	if ($options["prefix"]) {	
+		if (preg_match("/^\/.*_$/",$options["prefix"])) {
+			$prefix = $options["prefix"];
+		}
+		else {
+			echo "Prefix must begin with a slash and end with _ \n";
+			exit;
+		}
+	}
+
+echo "Proceeding with db $db and prefix $prefix \n";
+
+
+$sqlitedb = "sqlite:" . $db;
 $cfgfilename=DBPATH . $prefix . 'create.sql';
 $datafilename=DBPATH . $prefix . 'data.sql';
 $devfilename=DBPATH . $prefix . 'device.sql';
@@ -37,22 +70,26 @@ $custdevfilename=DBPATH . $prefix . 'custdevice.sql';
 $sysfilename=DBPATH . $prefix . 'system.sql';	
 $tablesdirectory=DBPATH . $prefix .'tabledumps';
 
+/**
+ *  sysTables - these tables will have their DDL dumped but no data.
+ */
 $sysTables = array (
-	"Carrier"  			=> true,			
-	"mfgmac"  			=> true,
-	"vendorxref"  		=> true,
-	"Device"	  		=> true,
-	"Device_atl"  		=> true,
-	"Trunk"				=> true,
-	"IPphone_FKEY"		=> true,
+
 );
  	 		
 
 /**
- *  tables to ignore
+ *  tables to ignore - mostly old deleted tables
  */
 
  $ignores = array (
+	"Carrier",			
+	"mfgmac",
+	"vendorxref",
+	"Device",
+	"Device_atl",
+	"Trunk",
+	"IPphone_FKEY",
 	"undolog",
 	"tt_help_user",
 	"vendorxref",
@@ -66,7 +103,9 @@ $sysTables = array (
 	"Panel",
 	"PanelGroup",
 	"PanelGroupPanel",
-	"UserPanel"
+	"sysuser",
+	"UserPanel",
+	"User"
  );
 
 /**
@@ -79,7 +118,9 @@ $sysTables = array (
 		),	
 		"globals" => array (
 			"AGENTSTART",
+			"ACL",
 			"ALERT",
+			"ALLOWHASHXFER",
 			"ASTDLIM",	
 			"ATTEMPTRESTART",
 			"BLINDBUSY",
@@ -98,12 +139,17 @@ $sysTables = array (
 			"CONFSTART",
 			"DESC",
 			"DIGITS",
+			"DYNAMICFEATURES",
+			"EMAILALERT",
+			"EXTBLKLST",
+			"EXTLEN",
 			"EXTLIM",
 			"FAX",
 			"FAXDETECT",
 			"FOPPASS",
 			"FQDNDROPBUFF",
 			"FQDNHTTP",
+			"FQDNPROV",
 			"FQDNTRUST",
 			"HAAUTOFAILBACK",
 			"HAENCRYPT",
@@ -116,6 +162,14 @@ $sysTables = array (
 			"IVRKEYWAIT",
 			"IVRDIGITWAIT",
 			"LACL",
+			"LDAPANONBIND", 
+			"LDAPBASE", 
+			"LDAPHOST", 
+			"LDAPOU", 
+			"LDAPUSER", 
+			"LDAPPASS", 
+			"LDAPTLS", 
+			"LEASEHDTIME",	
 			"LKEY",
 			"LOCALAREA",
 			"LOCALDLEN",
@@ -147,14 +201,18 @@ $sysTables = array (
 			"SIPMULTICAST",
 			"SNO",
 			"SPYPASS",
+			"SUPEMAIL",
 			"TFTP",
 			"UNDO",
 			"UNDONUM",
+			"USERCREATE",
+			"VCLFULL",
 			"VDELAY",
 			"VLIBS",
 			"VXT",
 			"VMAILAGE",
 			"VOICEINSTR",
+			"VOIPMAX",
 			"XMPP",
 			"XMPPSERV",
 			"ZTP"
@@ -171,11 +229,17 @@ $sysTables = array (
 				"zapcarfixed"	
 			),
 		"Cluster" => array (
-				"cfwd_extern_rule",
+			"callgroup",	
+			"cfwd_extern_rule",
+				"extlen",
 				"ldapropwd",
+				"max_in",
+				"max_out",
+				"monitor_type",
 				"number_range_low",
 				"number_range_high",
 				"number_min_dial",
+				"rec_file_dlim",
 				"routeclassoverride",
 				"startagent",
 				"startconfroom",
@@ -183,7 +247,8 @@ $sysTables = array (
 				"startivr",
 				"startparks",
 				"startqueue",
-				"startringgroup"	
+				"startringgroup",
+				"voipmax"	
 			),
 		"dateSeg" => array (
 				"desc"	
@@ -274,6 +339,14 @@ $sysTables = array (
 		)
 	);
 
+	/**
+	 * find_col
+	 *
+	 * @param string $col - column to drop
+	 * @param string $tab - tablename
+	 * @param string $dropstab - name of the drops array
+	 * @return boolean true - found, false notfound
+	 */
 	function find_col($col,$tab,$dropstab) {
 		foreach ($dropstab as $key => $row) {
 			if (strtolower($key) == strtolower($tab)) {
@@ -368,16 +441,9 @@ $sysTables = array (
 //  get column metadata and table data 	
 		try {
 			$colrows = $dbh->query( "PRAGMA table_info(" . $table['name'] . ")" )->fetchall();
-			if ($table['name'] == 'IPphoneCOSopen'  ||  $table['name'] == 'IPphoneCOSclosed' 
-				|| $table['name'] == 'IPphone_FKEY' ||  $table['name'] == 'Device_FKEY') {
-				$rows = $dbh->query( "SELECT * from " . $table['name'] )->fetchall();
-			}
-			else {
-				$rows = $dbh->query( "SELECT * from " . $table['name'] . " ORDER BY pkey" )->fetchall();
-			}
+			$rows = $dbh->query( "SELECT * from " . $table['name'] )->fetchall();
 		}
 		catch (Exception $e) {
-
 			echo "Oops on select from " . $table['name'] . " $e\n";
 			exit(16);
 		}
@@ -385,11 +451,17 @@ $sysTables = array (
 // Build the dump string 	
 		foreach ($rows as $row) {	
 			$tabname = 	$table['name'];
+			
 			foreach ($colrows as $col) {
-// Deal with UUIDs - we use ksuid
+// Deal with KSUIDs - allocate a ksuid to any table with an id column (unless its an autoincrement ID)
 				if ($col['name'] == 'id') {
-					if (!preg_match("/^[a-zA-Z0-9]{27}$/",$row[$col['name']])) {
-						$row[$col['name']] = trim(`ksuid`);						
+// Check for autoincrement
+					if (!preg_match ('/autoincrement/', $sql)) {
+// Check format - we don't want to overwrite a previously issued ksuid
+						if (!preg_match("/^[a-zA-Z0-9]{27}$/",$row[$col['name']])) {
+// set the ksuid
+							$row[$col['name']] = trim(`ksuid`);	
+						}					
 					}
 				} 
 				$myData = $row[$col['name']];
@@ -410,24 +482,11 @@ $sysTables = array (
 			$COLDATA = rtrim($COLDATA, ',');
 			$VALDATA = rtrim($VALDATA, ',');
 			
-// ignore system tables
+// put any systen tables them into a aeparate file 
 			if (isset($sysTables[$table['name']])) {			
 				$SYSINSERT .= "INSERT OR IGNORE INTO " . $table['name'] . "(" . $COLDATA . ") values (" . $VALDATA . ");\n";
 			}
-// dump the device table into a separate file
-			elseif ($table['name'] == 'Device') {
-/*
- * suggested fix for cust data persistence (and DROP device_atl)
- */
- 				if (isset($row['owner'])) {
-  					if ($row['owner'] == "cust") {
-  						$CUSTDEVINSERT .= "INSERT OR IGNORE INTO " . $table['name'] . "(" . $COLDATA . ") values (" . $VALDATA . ");\n";
-  					}
-  					else { 
-						$DEVINSERT .= "INSERT OR IGNORE INTO " . $table['name'] . "(" . $COLDATA . ") values (" . $VALDATA . ");\n";
-					}
-  				}
-			}
+
 // dump the customer data 
 			else {
 				$INSERT .= "INSERT OR IGNORE INTO " . $table['name'] . "(" . $COLDATA . ") values (" . $VALDATA . ");\n";
@@ -477,5 +536,4 @@ $sysTables = array (
 	`dos2unix $devfilename >/dev/null 2>&1`;
 	`dos2unix $custdevfilename >/dev/null 2>&1`;	
 	`dos2unix $sysfilename >/dev/null 2>&1`;
-		  
-?>		
+	

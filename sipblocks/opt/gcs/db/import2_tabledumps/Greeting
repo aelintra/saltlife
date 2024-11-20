@@ -1,0 +1,7 @@
+BEGIN TRANSACTION;
+INSERT OR IGNORE INTO Greeting(id,pkey,cluster,type) values ('2kyMq6LcWP808XxZ3yM7vEPLaUC','usergreeting1123','willand','wav');
+INSERT OR IGNORE INTO Greeting(id,pkey,cluster,type) values ('2kyMq5HbQDcnngRkGCdWgHalguc','usergreeting1124','willand','wav');
+INSERT OR IGNORE INTO Greeting(id,pkey,cluster,type) values ('2kyMq9vUZ0OKrctwAoJcqdJBmlA','usergreeting3456','willand','wav');
+INSERT OR IGNORE INTO Greeting(id,pkey,cluster,type) values ('2kyMq6j1Fyi9VR5qjQokkxmsgDY','usergreeting4001','duns','wav');
+INSERT OR IGNORE INTO Greeting(id,pkey,cluster,type) values ('2kyMq3M9dYVFdsiZeBTDQ0jCHg8','usergreeting4003','affcot','wav');
+COMMIT;

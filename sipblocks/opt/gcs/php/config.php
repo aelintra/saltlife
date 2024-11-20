@@ -12,8 +12,8 @@ define('SYSROOT',                       '/opt');
 define('SYSPREFIX',                     '/gcs');
 define('SYSPATH',                       SYSROOT . SYSPREFIX);
 
-define('INSTANCEID',                    SYSPATH . 'etc/identity/instance-id.txt');
-define('DOMAINID',                      SYSPATH . 'etc/identity/idomain-id.txt');
+define('INSTANCEID',                    SYSPATH . '/etc/identity/instance-id.txt');
+define('DOMAINID',                      SYSPATH . '/etc/identity/domain-id.txt');
 
 define('PHP',                           SYSPATH . '/php');                   
 define('SCRIPTS',                       SYSPATH . '/scripts');
@@ -26,8 +26,11 @@ define('UTILITIES',                     PHP . '/utilities');
 define('SNAPSHOTS', 			        SYSPATH . '/snap');
 define('BACKUPS', 						SYSPATH . '/bkup');
 define('CACHE', 						SYSPATH . '/cache');
+
 define('DBPATH', 						SYSPATH . '/db');
-define('SYSDB',						    DBPATH .  '/sqlite.db'); 
+define('DBNAME', 						'/sqlite.db');
+define('SYSDB',						    DBPATH .  DBNAME); 
+
 define('READONLY_DB',				    DBPATH .  '/sqlite.rdonly.db');
 define('COPY_DB',				        DBPATH .  '/sqlite.copy.db');
 
@@ -126,7 +129,7 @@ define('CUSTDATA',                      DBPATH . '/last_data.sql');			//customer
 define('LASTDEVICE',                    DBPATH . '/last_device.sql');			//device table previous iteration      
 define('CUSTDEVICE',                    DBPATH . '/last_custdevice.sql');	    //customer devices previous iteration
 define('DUMPER',                        GENERATOR . '/dumper.php'); 	//loc. of the dumper
-define('ASTGEN',                     GENERATOR . '/runAstGen.php');
+define('ASTGEN',                        GENERATOR . '/runAstGen.php');
 define('SIPFIX',                        UTILITIES . '/sipiaxfix.php'); 	//loc. of the V6 sipiaxfixup routine
 define('GENAST',                        SCRIPTS . '/genAst.sh');		//loc. of the generator
 define('HTTPOWNER',                     'www-data:www-data');		//apache user/group (Deb/Ubu)q

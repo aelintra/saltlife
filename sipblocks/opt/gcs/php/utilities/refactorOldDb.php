@@ -17,6 +17,8 @@
 //
 // N.B. Run this from the generator directory
 // This will patch the existing extensions and replace pickup and callgroup with their named equivalents
+// It will also clean up greetings and queueus, giving them extension numbers if they don't already have them
+// Finally, it will convert old callgroups to the newer Queue format
 // Probs take a backup before you begin, huh?
 //
 
@@ -49,7 +51,7 @@ foreach ($queues as $queue) {
     }
     
     $sql = $dbh->prepare("UPDATE queue SET name=?,pkey=? WHERE pkey=?");
-    echo ($sql->execute(array($queue['name'],$newkey,$queue['pkey'])));
+    $sql->execute(array($queue['name'],$newkey,$queue['pkey']));
 }
 
 /**
@@ -71,7 +73,7 @@ foreach ($greetings as $greeting) {
         continue;
     } 
     $sql = $dbh->prepare("UPDATE greeting SET pkey=?,filename=? WHERE id=?");
-    echo ($sql->execute(array($matches[1],$filename,$greeting['id'])));
+    $sql->execute(array($matches[1],$filename,$greeting['id']));
 }
 
 //
@@ -92,13 +94,13 @@ foreach ($ivrs as $ivr) {
 
     
     $sql = $dbh->prepare("UPDATE ivrmenu SET name=?,pkey=? WHERE pkey=?");
-    echo($sql->execute(array($ivr['name'],$newkey,$ivr['pkey'])));
+    $sql->execute(array($ivr['name'],$newkey,$ivr['pkey']));
 }
 
 /**
  * Now convert the old ringgroups to queues
  * The exception is Page groups.  These get a bogus queue strategy of "page"
- * They will ba handled seperately by the generator
+ * They will be handled seperately by the generator
  */
 
 
@@ -127,7 +129,7 @@ foreach ($ivrs as $ivr) {
              break;            
      }
      
-     echo ($helper->createTuple("queue",$tuple,true,true) . "\n");
+     $helper->createTuple("queue",$tuple,true,true);
      unset ($tuple);
  }
 

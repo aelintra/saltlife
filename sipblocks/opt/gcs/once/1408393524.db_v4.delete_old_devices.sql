@@ -1,3 +1,4 @@
+-- device will disappear in the new regime --
 BEGIN TRANSACTION;
 
 DELETE FROM device WHERE pkey LIKE 'Grandstream%';

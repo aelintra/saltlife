@@ -183,8 +183,10 @@ int main(int argc, char **argv)
 		rdnis_is_set = TRUE;
 	}
 
-    // set the cluster  	
+    // set the cluster  
 	// SetCluster();
+
+    // ToDo - this should be passed in the AGI call ??????  - maybe not
 
     strlcpy (myCluster, context, sizeof(myCluster));
     strlcpy (myClusterContext, context, sizeof(myClusterContext));
@@ -346,7 +348,7 @@ int main(int argc, char **argv)
     case 66:
         AgentLogout();
         break;
-// These need work for MultiTenant
+// These need work for MultiTenant (not if we separate the databases!!!!!!!!!!)
     case 67:
         ChanSpyWhisper();
         break;
@@ -366,8 +368,8 @@ int main(int argc, char **argv)
   END OF MAINLINE
 ************************************************************************/
 
-
-void SetCluster()
+// NO LONGER USED
+void SetCluster() 
 {
     //
     // Guarantees a cluster will be set.
@@ -480,6 +482,7 @@ void SetCluster()
     return;
 }
 
+// no longer referenced - noy sure why !!!!!!!!!!!!!!
 void setMoh()
 {
 

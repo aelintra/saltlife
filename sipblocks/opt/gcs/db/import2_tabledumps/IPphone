@@ -1,0 +1,98 @@
+BEGIN TRANSACTION;
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMqA1zIL6M6ZxMYv7fmSW50aK','1000','1440','YES','desk','3','duns','StaceyLiddell','snom','snom760','default','1000','000413717A4C','LwmJBYQ2TdGh','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq9ETDgrSUNcAXlKlp2iFKjX','1001','1440','YES','desk','3','duns','CameronGibson','snom','snomD765','default','1001','00041394D6E8','BHmPd8v7xn39','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq6I2nsdd85RQTWKBNhbTkvb','1002','1440','YES','desk','3','duns','MeetingRoom','snom','snomD765','default','1002','00041394D6EA','dqPrM9RHGDXp','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq9koBjFTxjxmMRtvoyvatDB','1003','1440','YES','desk','3','duns','JohnKnox','snom','snomD765','default','1003','00041394EF60','MqNgc2mLdy4v','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq8f95TE9UgvHmMJLhuX9L90','1004','1440','YES','desk','3','duns','PeterWatson','snom','snom760','default','1004','000413718B57','Rph6MxnP39Yr','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicerec,dvrvmail,passwd,protocol,provisionwith,sndcreds,technology,transport) values ('2kyMq5dM2KtDqnS4X9ZLVwHlB9f','1005','1440','YES','desk','3','duns','fax1005','General SIP','default','1005','dFC6ZyQ37tzH','IPV4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMqA8BZeaZ1YZCBEVBzakpge5','1008','1440','YES','desk','3','default','Paul Carson','snom','snomD785','default','1008','0004139B555D','nzvr7pDZFN3j','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE Snom.D785
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq3duHc0aC5d5Ew1nCqUdnPh','1101','1440','YES','desk','3','affcot','GheorgheAlexandroaie','snom','snomD785','default','1101','00041396F360','LHvfnjmrMkxG','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE Snom.D785
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq5N7uFshmbFKuak3n5dv1mQ','1102','1440','YES','desk','3','affcot','KylieRobinson','snom','snomD785','default','1102','0004139A026A','qTDHgXWntd9K','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE Snom.D785
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq59cppbmNwy6XngG7gNkoxU','1103','1440','YES','desk','3','affcot','JordanBiss','snom','snom760','default','1103','0004137194ff','MrDtR6mXWxgL','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq4FMPspqHfA1JdqYSQAU2eQ','1104','1440','YES','desk','3','affcot','ShaneNobel','snom','snom760','default','1104','000413717B0F','7cRJYf2btCj8','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq81JkUEsTc9YDq6PmtJcAix','1105','1440','YES','desk','3','affcot','LucianSimon','snom','snomD765','default','1105','000413980196','6DNCJbtpdyFw','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq57TzXkF4PqI1zeynkkSAKU','1110','1440','NO','desk','3','affcot','GeorgeAlexandroaie','snom','snom760','default','1110','000413717AD8','LGRtHbkwYBZQ','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq2wFe5PVUCs6xG6qZlKxaQl','2793','1440','YES','desk','3','willand','JuliaKulczycka','snom','snomD375','default','2793','00041391458B','tGP87WDFNnQ9','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callerid,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq7DeUDv3a2CDAu8ZHTi9Tqj','2794','1440','YES','01884308794','desk','3','willand','ChrisChater','snom','snomD375','default','2794','000413911054','jBGVghMPFyZW','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq7aLhm61clmc6VmNISZoDfq','2795','1440','YES','desk','3','willand','MollieEvans','snom','snomD375','default','2795','000413910CFC','4nH9MkF7fZJq','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq5BCp2HNd56DdJWkwMFDHhj','2796','1440','YES','desk','3','willand','NeilWorthington','snom','snomD375','default','2796','000413910CF7','wjh7XRb3grPy','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq2XUVBLaJp6YjemVgYhZWym','2797','1440','YES','desk','3','willand','SarahJones','snom','snomD375','default','2797','000413910CEB','wVndkNFx2ZzP','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq4xR7TD0GIaiqjAJdrjov57','2798','1440','YES','desk','3','willand','ChelanEllis','snom','snomD375','default','2798','000413910E4E','xkbpMdQZvzhL','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq43wifHV4dvdgza0lAeFA28','3301','1440','YES','desk','3','sandycroft','Stephen Hendry','snom','snomD785','default','3301','0004139A026E','rwFVDRMmzCf8','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE Snom.D785
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq3rDICQHMsZNh1z6CHJ82r6','3302','1440','YES','desk','3','sandycroft','Gareth M-J','snom','snomD785','default','3302','0004139A01EC','w9X6QjG82TL7','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE Snom.D785
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq4Y96xoPYjE0MXKyNOdBBlI','3303','1440','YES','desk','3','sandycroft','Jim Penman','snom','snomD785','default','3303','0004139A01D1','nh3RHV4tdGmF','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE Snom.D785
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+INSERT OR IGNORE INTO IPphone(id,pkey,abstimeout,active,callbackto,callmax,cluster,desc,device,devicemodel,devicerec,dvrvmail,macaddr,passwd,protocol,provision,provisionwith,sndcreds,technology,transport) values ('2kyMq5UP4x9QfsrNveJA5j32438','3304','1440','YES','desk','3','sandycroft','Dyfed Thomas','snom','snomD785','default','3304','0004139A0118','3rxcHWGkXydC','IPV4','#INCLUDE snom
+#INCLUDE snom.Fkey
+#INCLUDE Snom.D785
+#INCLUDE snom.udp
+#INCLUDE snom.ipv4','FQDN','Always','SIP','udp');
+COMMIT;
