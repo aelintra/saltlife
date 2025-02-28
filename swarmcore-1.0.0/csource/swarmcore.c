@@ -41,7 +41,7 @@ char abstimeout[32] = {'\0'};             // ABSTIMEOUT for any call
 char rescols[MAX_SQL_COLS][MAX_SQL_CLEN]; // result columns
 char eparm[64] = {'\0'};                  // Used by the Directory function (*57*)
 char **myargv;                            // AGI arguments
-char vmsg[255] = {'\0'};                  // console mesage buffer
+char vmsg[1024] = {'\0'};                  // console mesage buffer
 char uniqueid[64] = {'\0'};               // unique call id from Asterisk
 char callerid[MAX_EXT_LEN] = {'\0'};      // CLI number from Asterisk
 char calleridname[MAX_EXT_LEN] = {'\0'};  // CLI name from Asterisk
@@ -49,7 +49,7 @@ char channel[64] = {'\0'};                // AGI channel
 char chanId[64] = {'\0'};                 // True SIP endpoint ID of the calling channel
 char clidline[MAX_EXT_LEN] = {'\0'};      // CLI from trunk DB entry
 char clidphone[MAX_EXT_LEN] = {'\0'};     // CLI from phone DB entry
-char clidstrng[MAX_EXT_LEN] = {'\0'};     // CLI build string for sprintf
+char clidstrng[MAX_EXT_LEN] = {'\0'};     // CLI build string for snprintf
 char context[MAX_CLUSTER_LEN] = {'\0'};   // The curent context
 char dnid[MAX_EXT_LEN] = {'\0'};          // agi_dnid from Asterisk
 char extension[MAX_EXT_LEN] = {'\0'};     // agi_extension from Asterisk
@@ -93,7 +93,7 @@ void DebugFunctionTrace(const char *thisFunc)
 
     if (debug)
     {
-        sprintf(debugMsg, "Trace Entered  %s", thisFunc);
+        snprintf(debugMsg, sizeof(debugMsg), "Trace Entered  %s", thisFunc);
         AGITool_verbose(&agi, &res, debugMsg, 1);
     }
     return;
@@ -104,7 +104,7 @@ void DebugFunctionMsg(const char *thisFunc, const char *thisMsg)
 
     char debugMsg[MAX_MSG_LEN] = {'\0'};
 
-    sprintf(debugMsg, "(Function %s) %s ", thisFunc, thisMsg);
+    snprintf(debugMsg, sizeof(debugMsg), "Trace Entered  %s", thisFunc);
     AGITool_verbose(&agi, &res, debugMsg, 1);
 
     return;
@@ -276,6 +276,11 @@ int main(int argc, char **argv)
 //        DebugFunctionMsg(__FUNCTION__, vmsg);
     }
 
+/*
+ *	set MOH
+ */
+	setMoh();
+
     /*
     * the input command now has an integer number assigned to it (switchdig)
     * so we can just use a switch to select the command processor
@@ -356,7 +361,7 @@ int main(int argc, char **argv)
         ChanSpy();
         break;
     default:
-        sprintf(vmsg, "Function-call %i does not exist in the core", switchdig);
+        snprintf(vmsg, sizeof(vmsg), "Function-call %i does not exist in the core", switchdig);
         DebugFunctionMsg(__FUNCTION__, vmsg);
         break;
     }
@@ -482,7 +487,7 @@ void SetCluster()
     return;
 }
 
-// no longer referenced - noy sure why !!!!!!!!!!!!!!
+
 void setMoh()
 {
 
@@ -1814,7 +1819,7 @@ void PrepDial(char *number, char *type, char *twin, char *vmbox)
         AGITool_set_extension(&agi, &res, cfnum);
         AGITool_set_context(&agi, &res, myClusterContext);
 */
-        return NULL;
+        return;
 }
 
 char *SetRecord(char *key, char *compass)
@@ -1914,7 +1919,7 @@ char *SetRecord(char *key, char *compass)
     DebugFunctionMsg(__FUNCTION__, vmsg);
 
 
-
+// remove this.   One touch is never used
 /**
  * Set a char (dialChar) to use later when constructing the dialstring
  * OTR W = callee, w = caller
@@ -2049,7 +2054,7 @@ char *CFCheck(char *type, char *number)
 /**
  *  then go to voicemail
  */
-            sprintf(vmbox,"%s@%s%s",dnid,myCluster,vmflags);
+            snprintf(vmbox, sizeof(vmbox), "%s@%s%s",dnid,myCluster,vmflags);
             AGITool_exec(&agi,&res,"Voicemail",vmbox);
 			return NULL;
         }

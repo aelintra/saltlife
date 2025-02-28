@@ -83,9 +83,15 @@ define ('ASTCDR',                       '/cdr');
 define ('ASTLANG',                      'en-gb');
 
 /**
- * PJSIP files
+ * S3 Creds
  */
 
+define('AWS_KEY', "devuser");
+define('AWS_SECRET', "devuserpwd");
+
+/**
+ * PJSIP files
+ */
 
 define('PJSIP', 						ASTLOCALCONF . '/pjsip.conf');
 

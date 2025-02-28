@@ -1,4 +1,4 @@
-#Keypad Operations
+##Keypad Operations
  
 ##Transfers
 | Key Sequence |  data    |  function     |  Availability  |  Comment     |

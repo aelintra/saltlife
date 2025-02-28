@@ -1,3 +1,7 @@
+-- NB!!!!
+-- this transformation is NOT idempotent.  You may only run it ONCE
+-- as part of a sark V6 migration to pbx3
+--
 
 UPDATE agent SET cname = name;
 UPDATE agent SET cluster = (SELECT id FROM cluster WHERE pkey = agent.cluster);
@@ -11,7 +15,7 @@ UPDATE cos SET cluster = (SELECT id FROM cluster WHERE pkey = cos.cluster);
 UPDATE greeting SET cname = pkey; 
 UPDATE greeting SET cluster = (SELECT id FROM cluster WHERE pkey = greeting.cluster);
 
-UPDATE ipphone SET cluster = (SELECT id FROM cluster WHERE pkey = cluster);
+UPDATE ipphone SET cluster = (SELECT id FROM cluster WHERE pkey = ipphone.cluster);
 
 UPDATE ivrmenu SET cname = name;
 UPDATE ivrmenu SET cluster = (SELECT id FROM cluster WHERE pkey = ivrmenu.cluster);

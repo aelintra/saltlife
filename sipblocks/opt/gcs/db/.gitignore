@@ -1,4 +1,7 @@
 /last*
 /*_last*
 /*.db
+/*.wal
+/*.shm
 srkaudit.log
+/*litestream

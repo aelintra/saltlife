@@ -39,7 +39,7 @@
 #define PARM_PM1 *(myargv+3) 
 #define PARM_PM2 *(myargv+4) 
 #define PARM_PM3 *(myargv+5) /* usually the cluster Id but different in outQmt */
-#define SQLITEDB "/opt/gcs/db/sqlite.rdonly.db"
+#define SQLITEDB "/opt/pbx3/db/sqlite.rdonly.db"
 #define SOUNDIR "/usr/share/asterisk/extra-sounds/"
 #define QLOG "/var/log/asterisk/queue_log" 
 #define SIPDRIVER "PJSIP"
@@ -94,7 +94,7 @@ void AgentPause();
 void AgentUnpause();
 void ChanSpyWhisper();
 void ChanSpy();
-void Inbound();
+void Ingress();
 void CheckState();
 char* CheckTime();
 void IVR();
